@@ -1,0 +1,26 @@
+RewriteEngine On
+RewriteBase /
+
+# Security
+<Files config.php>
+    Order deny,allow
+    Deny from all
+</Files>
+
+# Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Skip real files/folders
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route everything through index.php
+RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
