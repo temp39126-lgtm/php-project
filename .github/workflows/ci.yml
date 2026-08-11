@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  php-lint:
+    name: PHP syntax lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql, gd, mbstring, curl, fileinfo
+      - name: Lint all PHP files
+        run: |
+          set -e
+          status=0
+          while IFS= read -r -d '' f; do
+            if ! php -l "$f" > /dev/null 2>&1; then
+              echo "::error file=$f::PHP syntax error"
+              php -l "$f" || true
+              status=1
+            fi
+          done < <(find . -path ./vendor -prune -o -name '*.php' -print0)
+          if [ "$status" -eq 0 ]; then echo "All PHP files: no syntax errors"; fi
+          exit $status
+
+  schema:
+    name: Database schema loads (idempotent)
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: gritfitnutri_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for MariaDB
+        run: |
+          for i in $(seq 1 30); do
+            if mysqladmin ping -h 127.0.0.1 -uroot -proot --silent 2>/dev/null; then
+              echo "MariaDB is up"; break
+            fi
+            echo "waiting for MariaDB..."; sleep 3
+          done
+      - name: Import schema twice (verify idempotency)
+        run: |
+          set -e
+          mysql -h 127.0.0.1 -uroot -proot gritfitnutri_ci < db/init.sql
+          echo "import #1 OK"
+          mysql -h 127.0.0.1 -uroot -proot gritfitnutri_ci < db/init.sql
+          echo "import #2 OK (idempotent)"
+      - name: Verify expected tables exist
+        run: |
+          set -e
+          for t in settings menu_items banners icons posters usps reviews \
+                   categories products product_images product_features \
+                   product_variations enquiries admin_users; do
+            mysql -h 127.0.0.1 -uroot -proot gritfitnutri_ci -e "SELECT 1 FROM \`$t\` LIMIT 1;" >/dev/null
+            echo "table OK: $t"
+          done
