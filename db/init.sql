@@ -101,6 +101,10 @@ CREATE TABLE IF NOT EXISTS banners (
     sort_order INT NOT NULL DEFAULT 0,
     is_active TINYINT(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- Slider slides can be image or video, and carry an optional second button.
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS video VARCHAR(500) DEFAULT '';
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS button2_text VARCHAR(120) DEFAULT '';
+ALTER TABLE banners ADD COLUMN IF NOT EXISTS button2_link VARCHAR(255) DEFAULT '';
 
 CREATE TABLE IF NOT EXISTS icons (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -213,20 +217,26 @@ SELECT * FROM (
 WHERE NOT EXISTS (SELECT 1 FROM posters);
 
 -- Homepage top slider slides (seed only when no slider banners exist).
-INSERT INTO banners (position, image, title, subtitle, button_text, button_link, sort_order, is_active)
+-- First slide is a VIDEO slide (the original hero), the rest are image slides.
+INSERT INTO banners (position, image, video, title, subtitle, button_text, button_link, button2_text, button2_link, sort_order, is_active)
 SELECT * FROM (
-    SELECT 'slider' AS position,
-           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-Yleqa574RZUoMZPw.jpg' AS image,
-           'Superfood Energy Bars' AS title, 'Fuel your day the natural way with clean, powerful nutrition.' AS subtitle,
-           'Shop Products' AS button_text, '/products' AS button_link, 1 AS sort_order, 1 AS is_active
+    SELECT 'slider' AS position, '' AS image,
+           'https://videos.pexels.com/video-files/8844271/8844271-uhd_4096_2160_24fps.mp4' AS video,
+           'Superfood Bars' AS title, 'Fuel Your Day with Natural Energy and Health' AS subtitle,
+           'About Us' AS button_text, '/about-us' AS button_link,
+           'Products' AS button2_text, '/products' AS button2_link, 0 AS sort_order, 1 AS is_active
     UNION ALL SELECT 'slider',
-           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,h=583,fit=crop/silemQfqUS99dRJ2/strawberry-about-mini-banner2-A3QOVoO0VXfMgyEo.jpg',
+           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-Yleqa574RZUoMZPw.jpg', '',
+           'Superfood Energy Bars', 'Fuel your day the natural way with clean, powerful nutrition.',
+           'Shop Products', '/products', '', '', 1, 1
+    UNION ALL SELECT 'slider',
+           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,h=583,fit=crop/silemQfqUS99dRJ2/strawberry-about-mini-banner2-A3QOVoO0VXfMgyEo.jpg', '',
            'Clean Ingredients, Real Energy', 'Zero preservatives. Lab tested. Crafted for an active lifestyle.',
-           'About Us', '/about-us', 2, 1
+           'About Us', '/about-us', '', '', 2, 1
     UNION ALL SELECT 'slider',
-           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-dJo5gEZMqxU6QJ28.jpg',
+           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-dJo5gEZMqxU6QJ28.jpg', '',
            'Taste the Difference', 'Premium superfood bars in a range of delicious flavours.',
-           'Explore Flavours', '/products', 3, 1
+           'Explore Flavours', '/products', '', '', 3, 1
 ) t
 WHERE NOT EXISTS (SELECT 1 FROM banners WHERE position='slider');
 

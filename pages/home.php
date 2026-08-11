@@ -19,12 +19,21 @@ foreach ($order as $section):
             <div class="slides">
                 <?php foreach ($slides as $idx => $s): ?>
                 <div class="slide <?= $idx === 0 ? 'active' : '' ?>">
-                    <?php if ($s['image']): ?><img src="<?= e(asset_url($s['image'])) ?>" alt="<?= e($s['title']) ?>"><?php endif; ?>
+                    <?php if (!empty($s['video'])): ?>
+                        <video autoplay muted loop playsinline><source src="<?= e($s['video']) ?>" type="video/mp4"></video>
+                    <?php elseif ($s['image']): ?>
+                        <img src="<?= e(asset_url($s['image'])) ?>" alt="<?= e($s['title']) ?>">
+                    <?php endif; ?>
                     <div class="slide-overlay"></div>
                     <div class="slide-content">
                         <?php if ($s['title']): ?><h2><?= e($s['title']) ?></h2><?php endif; ?>
                         <?php if ($s['subtitle']): ?><p><?= e($s['subtitle']) ?></p><?php endif; ?>
-                        <?php if ($s['button_text']): ?><a href="<?= e(link_url($s['button_link'])) ?>" class="btn btn-primary"><?= e($s['button_text']) ?></a><?php endif; ?>
+                        <?php if ($s['button_text'] || !empty($s['button2_text'])): ?>
+                        <div class="slide-buttons">
+                            <?php if ($s['button_text']): ?><a href="<?= e(link_url($s['button_link'])) ?>" class="btn btn-primary"><?= e($s['button_text']) ?></a><?php endif; ?>
+                            <?php if (!empty($s['button2_text'])): ?><a href="<?= e(link_url($s['button2_link'])) ?>" class="btn btn-outline"><?= e($s['button2_text']) ?></a><?php endif; ?>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <?php endforeach; ?>

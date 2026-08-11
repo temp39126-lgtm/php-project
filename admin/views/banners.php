@@ -24,6 +24,7 @@ $positions = ['slider' => 'Slider (homepage top carousel)', 'mid' => 'Mid (homep
         </div>
         <input type="hidden" name="current_image" value="<?= e($edit['image'] ?? '') ?>">
         <?php adm_image_field('Banner Image', 'image_file', 'image_url', $edit['image'] ?? ''); ?>
+        <?php adm_text('Background Video URL (mp4) — for slider video slides; overrides image when set', 'video', $edit['video'] ?? '', 'text', 'placeholder="https://.../video.mp4"'); ?>
         <div class="form-row">
             <?php adm_text('Title (optional)', 'title', $edit['title'] ?? ''); ?>
             <?php adm_text('Subtitle (optional)', 'subtitle', $edit['subtitle'] ?? ''); ?>
@@ -31,6 +32,10 @@ $positions = ['slider' => 'Slider (homepage top carousel)', 'mid' => 'Mid (homep
         <div class="form-row">
             <?php adm_text('Button Text (optional)', 'button_text', $edit['button_text'] ?? ''); ?>
             <?php adm_text('Button Link (optional)', 'button_link', $edit['button_link'] ?? ''); ?>
+        </div>
+        <div class="form-row">
+            <?php adm_text('Second Button Text (optional)', 'button2_text', $edit['button2_text'] ?? ''); ?>
+            <?php adm_text('Second Button Link (optional)', 'button2_link', $edit['button2_link'] ?? ''); ?>
         </div>
         <input type="hidden" name="is_active" value="0">
         <div class="form-group"><label class="chk"><input type="checkbox" name="is_active" value="1" <?= (!$edit || $edit['is_active']) ? 'checked' : '' ?>> Active</label></div>
@@ -44,7 +49,7 @@ $positions = ['slider' => 'Slider (homepage top carousel)', 'mid' => 'Mid (homep
         <tr><th>Image</th><th>Position</th><th>Title</th><th>Order</th><th>Status</th><th>Actions</th></tr>
         <?php foreach ($rows as $b): ?>
         <tr>
-            <td><?php if ($b['image']): ?><img class="thumb" src="<?= e(asset_url($b['image'])) ?>"><?php else: ?>—<?php endif; ?></td>
+            <td><?php if (!empty($b['video'])): ?><span class="badge-sm badge-gray">▶ video</span><?php elseif ($b['image']): ?><img class="thumb" src="<?= e(asset_url($b['image'])) ?>"><?php else: ?>—<?php endif; ?></td>
             <td><?= e($b['position']) ?></td>
             <td><?= e($b['title']) ?></td>
             <td><?= (int)$b['sort_order'] ?></td>

@@ -37,8 +37,9 @@ function cms_defaults() {
         // Slider / carousel (homepage top)
         'slider_enabled'       => '1',
 
-        // Hero / main banner
-        'hero_enabled'         => '1',
+        // Hero / main banner (off by default: the hero video now lives as the
+        // first slide of the slider; enable this for a separate static hero).
+        'hero_enabled'         => '0',
         'hero_type'            => 'video',
         'hero_video'           => 'https://videos.pexels.com/video-files/8844271/8844271-uhd_4096_2160_24fps.mp4',
         'hero_image'           => '',
