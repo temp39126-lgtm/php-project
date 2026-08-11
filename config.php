@@ -124,3 +124,7 @@ function generateCSRFToken() {
 function verifyCSRF($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
+
+// CMS helper layer (settings, content lists, URL helpers). Loaded after the
+// constants above so its defaults can fall back to them.
+require_once __DIR__ . '/includes/cms.php';

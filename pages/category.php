@@ -14,13 +14,13 @@ $products = $products->fetchAll();
         <?php else: ?>
         <div class="product-listing-grid">
             <?php foreach ($products as $prod): ?>
-            <a href="<?= SITE_URL ?>/<?= e($prod['slug']) ?>" class="product-item">
+            <a href="/<?= e($prod['slug']) ?>" class="product-item">
                 <div class="product-item-img">
                     <?php if ($prod['badge']): ?>
                     <span class="badge <?= $prod['badge'] === 'New Arrival' ? 'badge-arrival' : 'badge-flavor' ?>"><?= e($prod['badge']) ?></span>
                     <?php endif; ?>
-                    <?php if ($prod['image1']): ?>
-                    <img src="<?= SITE_URL ?>/<?= e($prod['image1']) ?>" alt="<?= e($prod['name']) ?>">
+                    <?php $cImg = product_primary_image($prod); if ($cImg): ?>
+                    <img src="<?= e(asset_url($cImg)) ?>" alt="<?= e($prod['name']) ?>">
                     <?php else: ?>
                     <div class="no-img-placeholder"><?= e($prod['name'][0]) ?></div>
                     <?php endif; ?>

@@ -12,10 +12,10 @@ $categories = $db->query("SELECT c.*, COUNT(p.id) as product_count FROM categori
         <?php else: ?>
         <div class="product-listing-grid">
             <?php foreach ($categories as $cat): ?>
-            <a href="<?= SITE_URL ?>/<?= e($cat['slug']) ?>" class="product-item">
+            <a href="/<?= e($cat['slug']) ?>" class="product-item">
                 <div class="product-item-img">
                     <?php if ($cat['image']): ?>
-                    <img src="<?= SITE_URL ?>/<?= e($cat['image']) ?>" alt="<?= e($cat['name']) ?>">
+                    <img src="<?= e(asset_url($cat['image'])) ?>" alt="<?= e($cat['name']) ?>">
                     <?php else: ?>
                     <div class="no-img-placeholder"><?= e($cat['name'][0]) ?></div>
                     <?php endif; ?>

@@ -53,31 +53,42 @@ $csrf = generateCSRFToken();
                 </form>
             </div>
             <div class="contact-info">
+                <?php if (setting('contact_email')): ?>
                 <div class="contact-info-card">
                     <h6>Email</h6>
-                    <a href="mailto:<?= SITE_EMAIL ?>"><?= SITE_EMAIL ?></a>
+                    <a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a>
                 </div>
+                <?php endif; ?>
+                <?php if (setting('contact_phone')): ?>
                 <div class="contact-info-card">
                     <h6>Phone</h6>
-                    <a href="tel:<?= str_replace(' ','',SITE_PHONE) ?>"><?= SITE_PHONE ?></a>
+                    <a href="tel:<?= e(str_replace(' ','',setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a>
                 </div>
+                <?php endif; ?>
+                <?php if (setting('contact_whatsapp')): ?>
                 <div class="contact-info-card">
                     <h6>WhatsApp</h6>
-                    <a href="https://wa.me/<?= WHATSAPP_NUMBER ?>" target="_blank" rel="noopener"><?= SITE_PHONE ?></a>
+                    <a href="https://wa.me/<?= e(setting('contact_whatsapp')) ?>" target="_blank" rel="noopener"><?= e(setting('contact_phone')) ?></a>
                 </div>
+                <?php endif; ?>
+                <?php if (setting('contact_address')): ?>
                 <div class="contact-info-card">
                     <h6>Address</h6>
-                    <p><?= SITE_ADDRESS ?></p>
+                    <p><?= e(setting('contact_address')) ?></p>
                 </div>
+                <?php endif; ?>
+                <?php if (setting('contact_hours')): ?>
                 <div class="contact-info-card">
                     <h6>Opening Hours</h6>
-                    <p>Monday - Friday: 9:00 AM - 6:00 PM<br>Saturday: 9:00 AM - 4:00 PM<br>Sunday: Closed</p>
+                    <p><?= nl2br(e(setting('contact_hours'))) ?></p>
                 </div>
-                
-                <!-- Google Map -->
+                <?php endif; ?>
+
+                <?php if (setting('contact_map')): ?>
                 <div class="contact-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3499.6775!2d77.1456!3d28.7004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d03e5f0000001%3A0x0!2sLok%20Vihar%2C%20Pitampura%2C%20New%20Delhi%2C%20110034!5e0!3m2!1sen!2sin!4v1700000000000" width="100%" height="250" style="border:0;border-radius:12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="<?= e(setting('contact_map')) ?>" width="100%" height="250" style="border:0;border-radius:12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
