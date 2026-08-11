@@ -252,6 +252,11 @@ h1,h2,h3,h4,h5{font-family:'Playfair Display',serif;line-height:1.3;color:var(--
 .slider-dots button{width:12px;height:12px;padding:0;border:none;border-radius:50%;background:rgba(255,255,255,0.45);cursor:pointer;transition:var(--transition);}
 .slider-dots button.active{background:var(--white);width:30px;border-radius:6px;}
 
+/* Mid banner slider (shorter than the hero slider) */
+.banner-slider .slides{height:380px;min-height:280px;}
+.banner-slider .slide-content h2{font-size:38px;}
+.banner-slider .slider-arrow{width:42px;height:42px;font-size:17px;}
+
 /* Banner overlay (CMS banners with text/CTA) */
 .banner-section{position:relative;}
 .banner-overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;background:rgba(0,0,0,0.35);padding:20px;}
@@ -356,4 +361,6 @@ h1,h2,h3,h4,h5{font-family:'Playfair Display',serif;line-height:1.3;color:var(--
     .slider-arrow{width:40px;height:40px;font-size:16px;}
     .slider-arrow.prev{left:12px;}
     .slider-arrow.next{right:12px;}
+    .banner-slider .slides{height:240px;min-height:200px;}
+    .banner-slider .slide-content h2{font-size:24px;}
 }

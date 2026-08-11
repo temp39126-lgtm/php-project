@@ -240,14 +240,18 @@ SELECT * FROM (
 ) t
 WHERE NOT EXISTS (SELECT 1 FROM banners WHERE position='slider');
 
--- Homepage mid banner (seed only when empty).
+-- Homepage mid banner slider slides (seed only when no mid banners exist).
 INSERT INTO banners (position, image, title, subtitle, button_text, button_link, sort_order, is_active)
 SELECT * FROM (
     SELECT 'mid' AS position,
            'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-Yleqa574RZUoMZPw.jpg' AS image,
            '' AS title, '' AS subtitle, '' AS button_text, '' AS button_link, 1 AS sort_order, 1 AS is_active
+    UNION ALL SELECT 'mid',
+           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-dJo5gEZMqxU6QJ28.jpg',
+           'Made with Clean Ingredients', 'Zero preservatives — just wholesome, natural energy.',
+           'Learn More', '/about-us', 2, 1
 ) t
-WHERE NOT EXISTS (SELECT 1 FROM banners);
+WHERE NOT EXISTS (SELECT 1 FROM banners WHERE position='mid');
 
 -- Default review (seed only when reviews table is empty).
 INSERT INTO reviews (name, location, avatar, rating, review_text, answer, sort_order, is_active)

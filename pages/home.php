@@ -22,7 +22,7 @@ foreach ($order as $section):
                     <?php if (!empty($s['video'])): ?>
                         <video autoplay muted loop playsinline><source src="<?= e($s['video']) ?>" type="video/mp4"></video>
                     <?php elseif ($s['image']): ?>
-                        <img src="<?= e(asset_url($s['image'])) ?>" alt="<?= e($s['title']) ?>">
+                        <img src="<?= e(asset_url($s['image'])) ?>" alt="">
                     <?php endif; ?>
                     <div class="slide-overlay"></div>
                     <div class="slide-content">
@@ -106,23 +106,50 @@ foreach ($order as $section):
         <?php
         break;
 
-    // ---------------- MID BANNER(S) ----------------
+    // ---------------- MID BANNER SLIDER ----------------
     case 'midbanner':
         if (!cms_flag('midbanner_enabled')) break;
         $banners = cms_rows('banners', true, "position=?", ['mid']);
-        foreach ($banners as $b):
-            if (!$b['image'] && !$b['title']) continue; ?>
-            <div class="banner-section">
-                <?php if ($b['image']): ?><img src="<?= e(asset_url($b['image'])) ?>" alt="<?= e($b['title']) ?>" class="banner-full"><?php endif; ?>
-                <?php if ($b['title'] || $b['button_text']): ?>
-                <div class="banner-overlay">
-                    <?php if ($b['title']): ?><h2><?= e($b['title']) ?></h2><?php endif; ?>
-                    <?php if ($b['subtitle']): ?><p><?= e($b['subtitle']) ?></p><?php endif; ?>
-                    <?php if ($b['button_text']): ?><a href="<?= e(link_url($b['button_link'])) ?>" class="btn btn-primary"><?= e($b['button_text']) ?></a><?php endif; ?>
+        $banners = array_values(array_filter($banners, fn($b) => $b['image'] !== '' || !empty($b['video']) || $b['title'] !== ''));
+        if (empty($banners)) break;
+        $multiB = count($banners) > 1;
+        ?>
+        <section class="hero-slider banner-slider">
+            <div class="slides">
+                <?php foreach ($banners as $idx => $b): ?>
+                <div class="slide <?= $idx === 0 ? 'active' : '' ?>">
+                    <?php if (!empty($b['video'])): ?>
+                        <video autoplay muted loop playsinline><source src="<?= e($b['video']) ?>" type="video/mp4"></video>
+                    <?php elseif ($b['image']): ?>
+                        <img src="<?= e(asset_url($b['image'])) ?>" alt="">
+                    <?php endif; ?>
+                    <?php if ($b['title'] || $b['button_text']): ?>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <?php if ($b['title']): ?><h2><?= e($b['title']) ?></h2><?php endif; ?>
+                        <?php if ($b['subtitle']): ?><p><?= e($b['subtitle']) ?></p><?php endif; ?>
+                        <?php if ($b['button_text'] || !empty($b['button2_text'])): ?>
+                        <div class="slide-buttons">
+                            <?php if ($b['button_text']): ?><a href="<?= e(link_url($b['button_link'])) ?>" class="btn btn-primary"><?= e($b['button_text']) ?></a><?php endif; ?>
+                            <?php if (!empty($b['button2_text'])): ?><a href="<?= e(link_url($b['button2_link'])) ?>" class="btn btn-outline"><?= e($b['button2_text']) ?></a><?php endif; ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
+                <?php endforeach; ?>
             </div>
-        <?php endforeach;
+            <?php if ($multiB): ?>
+            <button class="slider-arrow prev" aria-label="Previous banner">&#10094;</button>
+            <button class="slider-arrow next" aria-label="Next banner">&#10095;</button>
+            <div class="slider-dots">
+                <?php foreach ($banners as $idx => $b): ?>
+                <button class="<?= $idx === 0 ? 'active' : '' ?>" aria-label="Go to banner <?= $idx + 1 ?>"></button>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+        </section>
+        <?php
         break;
 
     // ---------------- CLEAN ENERGY / ICONS ----------------
