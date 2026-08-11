@@ -19,6 +19,11 @@ MariaDB does not auto-start; start it, then run the built-in PHP dev server:
 
 ```
 sudo service mariadb start
+# Fix socket path: MariaDB puts its socket at /run/mysqld/mysqld.sock, but PHP's
+# pdo_mysql.default_socket is /var/run/mysqld/mysqld.sock, and on this VM /var/run is a
+# plain dir (not a symlink to /run). Without this, config.php (DB_HOST=localhost, which
+# means "connect via socket") fails with: DB Error: SQLSTATE[HY000] [2002] No such file or directory
+sudo ln -sfn /run/mysqld /var/run/mysqld
 php -S 0.0.0.0:8000 -t /workspace /workspace/dev/router.php
 ```
 
@@ -51,6 +56,25 @@ php -S 0.0.0.0:8000 -t /workspace /workspace/dev/router.php
   so admin login, category/product create/edit, and the contact form all work locally. The
   admin panel is fully self-styled (inline `<style>`), so it renders correctly offline.
 - Uploaded images are written to `uploads/` and served as static files.
+
+### Content management (CMS)
+Nearly all site content is database-backed and editable from the admin dashboard at
+`/admin` — no code changes needed to update content.
+- `includes/cms.php` is the CMS helper layer: `setting()/set_setting()` for singleton
+  key/value content (stored in the `settings` table, with defaults falling back to the
+  original hard-coded values), `cms_rows()` for ordered/active lists, `cms_flag()` for
+  enable/disable toggles, and `asset_url()`/`link_url()` which emit root-relative URLs so
+  media and links work both locally and in production. It is required from `config.php`.
+- Repeatable content lives in its own tables: `menu_items`, `banners`, `icons`, `posters`,
+  `usps`, `reviews` (+ `answer`), and per-product `product_images`, `product_features`,
+  `product_variations`. Products also gained `grams`, `flavour`, `whatsapp_number`,
+  `contact_number`.
+- Admin code is modular: `admin/index.php` (auth + layout + sidebar), `admin/handlers.php`
+  (POST dispatcher, PRG pattern), `admin/lib.php` (generic reorder/toggle/delete + form
+  helpers), and `admin/views/*.php` (one file per CMS section).
+- Frontend (`includes/header.php`, `includes/footer.php`, `pages/*.php`) reads everything
+  through the CMS helpers, so admin edits appear immediately on the live site.
+- `db/init.sql` contains the full schema + idempotent seed for all of the above.
 
 ### Lint / test / build
 There is no build step, no linter config, and no automated test suite in this repo. Use
