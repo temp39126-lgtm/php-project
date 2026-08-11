@@ -44,6 +44,8 @@ if (empty($socialSvg)) {
 </section>
 <?php endif; ?>
 
+<?php render_banner_slider('bottom'); /* banners assigned to the "Bottom" position */ ?>
+
 <?php if (cms_flag('bottombanner_enabled') && setting('bottombanner_title')):
     $bbImg = setting('bottombanner_image');
     $bbStyle = $bbImg ? ' style="background-image:linear-gradient(rgba(13,20,26,0.7),rgba(13,20,26,0.7)),url(\'' . e(asset_url($bbImg)) . '\');background-size:cover;background-position:center;"' : '';

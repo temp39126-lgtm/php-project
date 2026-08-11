@@ -106,7 +106,7 @@ function hp_area($key, $label) {
 
     <div class="card">
         <h3>Section Order</h3>
-        <p class="hint">Comma-separated order of homepage sections. Available keys: slider, hero, products, midbanner, cleanenergy, abouthome, usps, posters.</p>
+        <p class="hint">Comma-separated order of homepage sections. Available keys: slider, hero, products, midbanner, cleanenergy, abouthome, usps, posters, other.</p>
         <?php hp_text('home_order', 'Order'); ?>
     </div>
 

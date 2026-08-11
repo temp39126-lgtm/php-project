@@ -110,7 +110,7 @@ function cms_defaults() {
         'social_twitter'       => $c('SOCIAL_TWITTER', 'https://x.com/gritfitnutri'),
 
         // Homepage section order
-        'home_order'           => 'slider,hero,products,midbanner,cleanenergy,abouthome,usps,posters',
+        'home_order'           => 'slider,hero,products,midbanner,cleanenergy,abouthome,usps,posters,other',
     ];
     return $d;
 }
@@ -167,6 +167,54 @@ function cms_rows($table, $activeOnly = true, $where = '', $params = []) {
     $stmt = getDB()->prepare($sql);
     $stmt->execute($params);
     return $stmt->fetchAll();
+}
+
+// Render the active banners for a position as a slider/carousel.
+// Reused for every banner position (slider, hero, mid, bottom, other) so any
+// banner an admin assigns to a position shows up on the site. Pass
+// $extraClass='' for the full-height top slider; 'banner-slider' for shorter strips.
+function render_banner_slider($position, $extraClass = 'banner-slider') {
+    $banners = cms_rows('banners', true, "position=?", [$position]);
+    $banners = array_values(array_filter(
+        $banners,
+        fn($b) => $b['image'] !== '' || !empty($b['video']) || $b['title'] !== ''
+    ));
+    if (empty($banners)) return;
+    $multi = count($banners) > 1;
+    $cls = trim('hero-slider ' . $extraClass);
+    echo '<section class="' . e($cls) . '"><div class="slides">';
+    foreach ($banners as $idx => $b) {
+        echo '<div class="slide ' . ($idx === 0 ? 'active' : '') . '">';
+        if (!empty($b['video'])) {
+            echo '<video autoplay muted loop playsinline><source src="' . e($b['video']) . '" type="video/mp4"></video>';
+        } elseif ($b['image']) {
+            echo '<img src="' . e(asset_url($b['image'])) . '" alt="">';
+        }
+        if ($b['title'] || $b['subtitle'] || $b['button_text'] || !empty($b['button2_text'])) {
+            echo '<div class="slide-overlay"></div><div class="slide-content">';
+            if ($b['title']) echo '<h2>' . e($b['title']) . '</h2>';
+            if ($b['subtitle']) echo '<p>' . e($b['subtitle']) . '</p>';
+            if ($b['button_text'] || !empty($b['button2_text'])) {
+                echo '<div class="slide-buttons">';
+                if ($b['button_text']) echo '<a href="' . e(link_url($b['button_link'])) . '" class="btn btn-primary">' . e($b['button_text']) . '</a>';
+                if (!empty($b['button2_text'])) echo '<a href="' . e(link_url($b['button2_link'])) . '" class="btn btn-outline">' . e($b['button2_text']) . '</a>';
+                echo '</div>';
+            }
+            echo '</div>';
+        }
+        echo '</div>';
+    }
+    echo '</div>';
+    if ($multi) {
+        echo '<button class="slider-arrow prev" aria-label="Previous slide">&#10094;</button>';
+        echo '<button class="slider-arrow next" aria-label="Next slide">&#10095;</button>';
+        echo '<div class="slider-dots">';
+        foreach ($banners as $idx => $b) {
+            echo '<button class="' . ($idx === 0 ? 'active' : '') . '" aria-label="Go to slide ' . ($idx + 1) . '"></button>';
+        }
+        echo '</div>';
+    }
+    echo '</section>';
 }
 
 // Resolve a media path to a URL. Full URLs pass through; stored upload paths

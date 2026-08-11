@@ -7,52 +7,16 @@ if (empty($order)) $order = ['hero', 'products', 'midbanner', 'cleanenergy', 'ab
 foreach ($order as $section):
     switch ($section):
 
-    // ---------------- SLIDER / CAROUSEL ----------------
+    // ---------------- SLIDER / CAROUSEL (top, full height) ----------------
     case 'slider':
         if (!cms_flag('slider_enabled')) break;
-        $slides = cms_rows('banners', true, "position=?", ['slider']);
-        $slides = array_values(array_filter($slides, fn($s) => $s['image'] !== '' || $s['title'] !== ''));
-        if (empty($slides)) break;
-        $multi = count($slides) > 1;
-        ?>
-        <section class="hero-slider">
-            <div class="slides">
-                <?php foreach ($slides as $idx => $s): ?>
-                <div class="slide <?= $idx === 0 ? 'active' : '' ?>">
-                    <?php if (!empty($s['video'])): ?>
-                        <video autoplay muted loop playsinline><source src="<?= e($s['video']) ?>" type="video/mp4"></video>
-                    <?php elseif ($s['image']): ?>
-                        <img src="<?= e(asset_url($s['image'])) ?>" alt="">
-                    <?php endif; ?>
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <?php if ($s['title']): ?><h2><?= e($s['title']) ?></h2><?php endif; ?>
-                        <?php if ($s['subtitle']): ?><p><?= e($s['subtitle']) ?></p><?php endif; ?>
-                        <?php if ($s['button_text'] || !empty($s['button2_text'])): ?>
-                        <div class="slide-buttons">
-                            <?php if ($s['button_text']): ?><a href="<?= e(link_url($s['button_link'])) ?>" class="btn btn-primary"><?= e($s['button_text']) ?></a><?php endif; ?>
-                            <?php if (!empty($s['button2_text'])): ?><a href="<?= e(link_url($s['button2_link'])) ?>" class="btn btn-outline"><?= e($s['button2_text']) ?></a><?php endif; ?>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-            <?php if ($multi): ?>
-            <button class="slider-arrow prev" aria-label="Previous slide">&#10094;</button>
-            <button class="slider-arrow next" aria-label="Next slide">&#10095;</button>
-            <div class="slider-dots">
-                <?php foreach ($slides as $idx => $s): ?>
-                <button class="<?= $idx === 0 ? 'active' : '' ?>" aria-label="Go to slide <?= $idx + 1 ?>"></button>
-                <?php endforeach; ?>
-            </div>
-            <?php endif; ?>
-        </section>
-        <?php
+        render_banner_slider('slider', '');
         break;
 
     // ---------------- HERO ----------------
     case 'hero':
+        // Banners assigned to the "Hero area" position render here as a slider.
+        render_banner_slider('hero', '');
         if (!cms_flag('hero_enabled')) break;
         $heroImg = setting('hero_image');
         ?>
@@ -109,47 +73,12 @@ foreach ($order as $section):
     // ---------------- MID BANNER SLIDER ----------------
     case 'midbanner':
         if (!cms_flag('midbanner_enabled')) break;
-        $banners = cms_rows('banners', true, "position=?", ['mid']);
-        $banners = array_values(array_filter($banners, fn($b) => $b['image'] !== '' || !empty($b['video']) || $b['title'] !== ''));
-        if (empty($banners)) break;
-        $multiB = count($banners) > 1;
-        ?>
-        <section class="hero-slider banner-slider">
-            <div class="slides">
-                <?php foreach ($banners as $idx => $b): ?>
-                <div class="slide <?= $idx === 0 ? 'active' : '' ?>">
-                    <?php if (!empty($b['video'])): ?>
-                        <video autoplay muted loop playsinline><source src="<?= e($b['video']) ?>" type="video/mp4"></video>
-                    <?php elseif ($b['image']): ?>
-                        <img src="<?= e(asset_url($b['image'])) ?>" alt="">
-                    <?php endif; ?>
-                    <?php if ($b['title'] || $b['button_text']): ?>
-                    <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <?php if ($b['title']): ?><h2><?= e($b['title']) ?></h2><?php endif; ?>
-                        <?php if ($b['subtitle']): ?><p><?= e($b['subtitle']) ?></p><?php endif; ?>
-                        <?php if ($b['button_text'] || !empty($b['button2_text'])): ?>
-                        <div class="slide-buttons">
-                            <?php if ($b['button_text']): ?><a href="<?= e(link_url($b['button_link'])) ?>" class="btn btn-primary"><?= e($b['button_text']) ?></a><?php endif; ?>
-                            <?php if (!empty($b['button2_text'])): ?><a href="<?= e(link_url($b['button2_link'])) ?>" class="btn btn-outline"><?= e($b['button2_text']) ?></a><?php endif; ?>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <?php endforeach; ?>
-            </div>
-            <?php if ($multiB): ?>
-            <button class="slider-arrow prev" aria-label="Previous banner">&#10094;</button>
-            <button class="slider-arrow next" aria-label="Next banner">&#10095;</button>
-            <div class="slider-dots">
-                <?php foreach ($banners as $idx => $b): ?>
-                <button class="<?= $idx === 0 ? 'active' : '' ?>" aria-label="Go to banner <?= $idx + 1 ?>"></button>
-                <?php endforeach; ?>
-            </div>
-            <?php endif; ?>
-        </section>
-        <?php
+        render_banner_slider('mid');
+        break;
+
+    // ---------------- OTHER BANNERS (end of homepage) ----------------
+    case 'other':
+        render_banner_slider('other');
         break;
 
     // ---------------- CLEAN ENERGY / ICONS ----------------
