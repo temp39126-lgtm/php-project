@@ -19,6 +19,11 @@ MariaDB does not auto-start; start it, then run the built-in PHP dev server:
 
 ```
 sudo service mariadb start
+# Fix socket path: MariaDB puts its socket at /run/mysqld/mysqld.sock, but PHP's
+# pdo_mysql.default_socket is /var/run/mysqld/mysqld.sock, and on this VM /var/run is a
+# plain dir (not a symlink to /run). Without this, config.php (DB_HOST=localhost, which
+# means "connect via socket") fails with: DB Error: SQLSTATE[HY000] [2002] No such file or directory
+sudo ln -sfn /run/mysqld /var/run/mysqld
 php -S 0.0.0.0:8000 -t /workspace /workspace/dev/router.php
 ```
 
