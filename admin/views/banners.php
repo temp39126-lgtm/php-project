@@ -6,7 +6,13 @@ if (isset($_GET['edit'])) {
     $edit = $s->fetch();
 }
 $rows = $db->query("SELECT * FROM banners ORDER BY sort_order, id")->fetchAll();
-$positions = ['slider' => 'Slider (homepage top carousel)', 'mid' => 'Mid (homepage banner strip)', 'hero' => 'Hero area', 'bottom' => 'Bottom', 'other' => 'Other'];
+$positions = [
+    'slider' => 'Slider (homepage top carousel)',
+    'mid'    => 'Mid (homepage banner strip)',
+    'hero'   => 'Hero area (homepage, below top slider)',
+    'bottom' => 'Bottom (above footer, all pages)',
+    'other'  => 'Other (end of homepage)',
+];
 ?>
 <h2 class="page-title">Banners</h2>
 <div class="card">
