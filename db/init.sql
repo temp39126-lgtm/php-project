@@ -212,6 +212,24 @@ SELECT * FROM (
 ) t
 WHERE NOT EXISTS (SELECT 1 FROM posters);
 
+-- Homepage top slider slides (seed only when no slider banners exist).
+INSERT INTO banners (position, image, title, subtitle, button_text, button_link, sort_order, is_active)
+SELECT * FROM (
+    SELECT 'slider' AS position,
+           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-Yleqa574RZUoMZPw.jpg' AS image,
+           'Superfood Energy Bars' AS title, 'Fuel your day the natural way with clean, powerful nutrition.' AS subtitle,
+           'Shop Products' AS button_text, '/products' AS button_link, 1 AS sort_order, 1 AS is_active
+    UNION ALL SELECT 'slider',
+           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,h=583,fit=crop/silemQfqUS99dRJ2/strawberry-about-mini-banner2-A3QOVoO0VXfMgyEo.jpg',
+           'Clean Ingredients, Real Energy', 'Zero preservatives. Lab tested. Crafted for an active lifestyle.',
+           'About Us', '/about-us', 2, 1
+    UNION ALL SELECT 'slider',
+           'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-dJo5gEZMqxU6QJ28.jpg',
+           'Taste the Difference', 'Premium superfood bars in a range of delicious flavours.',
+           'Explore Flavours', '/products', 3, 1
+) t
+WHERE NOT EXISTS (SELECT 1 FROM banners WHERE position='slider');
+
 -- Homepage mid banner (seed only when empty).
 INSERT INTO banners (position, image, title, subtitle, button_text, button_link, sort_order, is_active)
 SELECT * FROM (

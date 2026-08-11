@@ -17,6 +17,12 @@ function hp_area($key, $label) {
     <input type="hidden" name="return" value="homepage">
 
     <div class="card">
+        <h3>Slider / Carousel (top of homepage)</h3>
+        <?php hp_chk('slider_enabled', 'Show slider'); ?>
+        <p class="hint">Add / edit / reorder slides under <a href="<?= e(adm('banners')) ?>">Banners</a> using position <strong>Slider</strong>. Each slide supports an image, heading, subtitle and a button. Slides auto-rotate with arrows and dots.</p>
+    </div>
+
+    <div class="card">
         <h3>Hero / Main Banner</h3>
         <?php hp_chk('hero_enabled', 'Show hero section'); ?>
         <div class="form-group"><label>Background Type</label>
@@ -100,7 +106,7 @@ function hp_area($key, $label) {
 
     <div class="card">
         <h3>Section Order</h3>
-        <p class="hint">Comma-separated order of homepage sections. Available keys: hero, products, midbanner, cleanenergy, abouthome, usps, posters.</p>
+        <p class="hint">Comma-separated order of homepage sections. Available keys: slider, hero, products, midbanner, cleanenergy, abouthome, usps, posters.</p>
         <?php hp_text('home_order', 'Order'); ?>
     </div>
 

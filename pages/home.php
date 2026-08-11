@@ -7,6 +7,41 @@ if (empty($order)) $order = ['hero', 'products', 'midbanner', 'cleanenergy', 'ab
 foreach ($order as $section):
     switch ($section):
 
+    // ---------------- SLIDER / CAROUSEL ----------------
+    case 'slider':
+        if (!cms_flag('slider_enabled')) break;
+        $slides = cms_rows('banners', true, "position=?", ['slider']);
+        $slides = array_values(array_filter($slides, fn($s) => $s['image'] !== '' || $s['title'] !== ''));
+        if (empty($slides)) break;
+        $multi = count($slides) > 1;
+        ?>
+        <section class="hero-slider">
+            <div class="slides">
+                <?php foreach ($slides as $idx => $s): ?>
+                <div class="slide <?= $idx === 0 ? 'active' : '' ?>">
+                    <?php if ($s['image']): ?><img src="<?= e(asset_url($s['image'])) ?>" alt="<?= e($s['title']) ?>"><?php endif; ?>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-content">
+                        <?php if ($s['title']): ?><h2><?= e($s['title']) ?></h2><?php endif; ?>
+                        <?php if ($s['subtitle']): ?><p><?= e($s['subtitle']) ?></p><?php endif; ?>
+                        <?php if ($s['button_text']): ?><a href="<?= e(link_url($s['button_link'])) ?>" class="btn btn-primary"><?= e($s['button_text']) ?></a><?php endif; ?>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php if ($multi): ?>
+            <button class="slider-arrow prev" aria-label="Previous slide">&#10094;</button>
+            <button class="slider-arrow next" aria-label="Next slide">&#10095;</button>
+            <div class="slider-dots">
+                <?php foreach ($slides as $idx => $s): ?>
+                <button class="<?= $idx === 0 ? 'active' : '' ?>" aria-label="Go to slide <?= $idx + 1 ?>"></button>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+        </section>
+        <?php
+        break;
+
     // ---------------- HERO ----------------
     case 'hero':
         if (!cms_flag('hero_enabled')) break;

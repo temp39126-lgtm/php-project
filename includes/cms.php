@@ -34,6 +34,9 @@ function cms_defaults() {
         'adbar_text'           => "Fueling the World with India's Finest Energy Bars.",
         'adbar_link'           => '',
 
+        // Slider / carousel (homepage top)
+        'slider_enabled'       => '1',
+
         // Hero / main banner
         'hero_enabled'         => '1',
         'hero_type'            => 'video',
@@ -106,7 +109,7 @@ function cms_defaults() {
         'social_twitter'       => $c('SOCIAL_TWITTER', 'https://x.com/gritfitnutri'),
 
         // Homepage section order
-        'home_order'           => 'hero,products,midbanner,cleanenergy,abouthome,usps,posters',
+        'home_order'           => 'slider,hero,products,midbanner,cleanenergy,abouthome,usps,posters',
     ];
     return $d;
 }
