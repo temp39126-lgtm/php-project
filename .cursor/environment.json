@@ -1,0 +1,5 @@
+{
+  "name": "Grit Fit Nutri",
+  "install": "bash dev/cloud-setup.sh install",
+  "start": "bash dev/cloud-setup.sh start"
+}
