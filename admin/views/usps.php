@@ -9,6 +9,20 @@ $rows = $db->query("SELECT * FROM usps ORDER BY sort_order, id")->fetchAll();
 ?>
 <h2 class="page-title">USPS — Unique Selling Points</h2>
 <div class="card">
+    <h3>Display Size</h3>
+    <p class="hint">Controls how large the USP icons appear in the "Why Choose Us" section on the homepage.</p>
+    <form method="POST">
+        <input type="hidden" name="action" value="save_settings">
+        <input type="hidden" name="return" value="usps">
+        <div class="form-group">
+            <label>USP icon size (pixels)</label>
+            <input type="number" name="s[usp_size]" value="<?= (int)setting('usp_size') ?>" min="16" max="200" step="1">
+            <p class="hint">Current default is 38. The circular badge grows automatically with the icon.</p>
+        </div>
+        <button class="btn btn-blue">Save USP Size</button>
+    </form>
+</div>
+<div class="card">
     <h3><?= $edit ? 'Edit USP' : 'Add USP' ?></h3>
     <p class="hint">Shown in the "Why Choose Us" section on the homepage.</p>
     <form method="POST" enctype="multipart/form-data">

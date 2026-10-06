@@ -28,6 +28,7 @@ $siteName = setting('site_name');
         --icon-h:<?= (int)setting('icon_size') ?>px;
         --banner-h:<?= (int)setting('banner_size') ?>px;
         --poster-h:<?= (int)setting('poster_size') ?>px;
+        --usp-h:<?= (int)setting('usp_size') ?>px;
     }
     </style>
     <link rel="icon" href="<?= e(asset_url($logo)) ?>" type="image/png">
