@@ -16,6 +16,20 @@ $positions = [
 ?>
 <h2 class="page-title">Banners</h2>
 <div class="card">
+    <h3>Display Size</h3>
+    <p class="hint">Controls the height of the mid / bottom / other banner sliders on the site. (The full-height top slider keeps its own height.)</p>
+    <form method="POST">
+        <input type="hidden" name="action" value="save_settings">
+        <input type="hidden" name="return" value="banners">
+        <div class="form-group">
+            <label>Banner height (pixels)</label>
+            <input type="number" name="s[banner_size]" value="<?= (int)setting('banner_size') ?>" min="120" max="900" step="10">
+            <p class="hint">Current default is 380. Increase to make banners taller.</p>
+        </div>
+        <button class="btn btn-blue">Save Banner Size</button>
+    </form>
+</div>
+<div class="card">
     <h3><?= $edit ? 'Edit Banner' : 'Add Banner' ?></h3>
     <p class="hint">Homepage promotional banners. "Mid" banners appear in the banner strip on the homepage.</p>
     <form method="POST" enctype="multipart/form-data">

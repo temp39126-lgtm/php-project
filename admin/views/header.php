@@ -25,6 +25,11 @@ $menu = $db->query("SELECT * FROM menu_items ORDER BY sort_order, id")->fetchAll
             <input type="file" name="file_site_logo" accept="image/*" onchange="previewImg(this)">
             <input type="text" name="s[site_logo]" value="<?= e(setting('site_logo')) ?>" class="mt8" placeholder="or image path/URL">
         </div>
+        <div class="form-group">
+            <label>Logo size (height in pixels)</label>
+            <input type="number" name="s[logo_size]" value="<?= (int)setting('logo_size') ?>" min="20" max="300" step="1">
+            <p class="hint">Current default is 75. Increase to make the header logo bigger.</p>
+        </div>
         <button class="btn btn-blue">Save Logo &amp; Identity</button>
     </form>
 </div>

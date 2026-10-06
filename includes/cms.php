@@ -111,6 +111,12 @@ function cms_defaults() {
 
         // Homepage section order
         'home_order'           => 'slider,hero,products,midbanner,cleanenergy,abouthome,usps,posters,other',
+
+        // Display sizes (pixels) — admin-adjustable from the dashboard.
+        'logo_size'            => '75',  // header logo height
+        'icon_size'            => '56',  // Clean Energy / feature icon height
+        'banner_size'          => '380', // mid/bottom/other banner slider height
+        'poster_size'          => '80',  // certificate / poster strip image height
     ];
     return $d;
 }
