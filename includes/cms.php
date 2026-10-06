@@ -117,6 +117,7 @@ function cms_defaults() {
         'icon_size'            => '56',  // Clean Energy / feature icon height
         'banner_size'          => '380', // mid/bottom/other banner slider height
         'poster_size'          => '80',  // certificate / poster strip image height
+        'usp_size'             => '38',  // USPS ("Why Choose Us") icon size
     ];
     return $d;
 }
