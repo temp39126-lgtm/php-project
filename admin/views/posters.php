@@ -9,6 +9,20 @@ $rows = $db->query("SELECT * FROM posters ORDER BY sort_order, id")->fetchAll();
 ?>
 <h2 class="page-title">Posters</h2>
 <div class="card">
+    <h3>Display Size</h3>
+    <p class="hint">Controls how large the certificate / poster images appear in the strip on the homepage.</p>
+    <form method="POST">
+        <input type="hidden" name="action" value="save_settings">
+        <input type="hidden" name="return" value="posters">
+        <div class="form-group">
+            <label>Poster / certificate size (height in pixels)</label>
+            <input type="number" name="s[poster_size]" value="<?= (int)setting('poster_size') ?>" min="30" max="400" step="1">
+            <p class="hint">Current default is 80. Increase to make the certificates/posters bigger.</p>
+        </div>
+        <button class="btn btn-blue">Save Poster Size</button>
+    </form>
+</div>
+<div class="card">
     <h3><?= $edit ? 'Edit Poster' : 'Add Poster' ?></h3>
     <p class="hint">Image strip on the homepage (used for certificates / promotional posters).</p>
     <form method="POST" enctype="multipart/form-data">

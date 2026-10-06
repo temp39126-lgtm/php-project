@@ -22,6 +22,14 @@ $siteName = setting('site_name');
     <title><?= isset($pageTitle) ? e($pageTitle) . ' | ' : '' ?><?= e($siteName) ?></title>
     <meta name="description" content="<?= isset($pageDesc) ? e($pageDesc) : 'Fueling the World with India\'s Finest Energy Bars. Premium superfood energy bars.' ?>">
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+    :root{
+        --logo-h:<?= (int)setting('logo_size') ?>px;
+        --icon-h:<?= (int)setting('icon_size') ?>px;
+        --banner-h:<?= (int)setting('banner_size') ?>px;
+        --poster-h:<?= (int)setting('poster_size') ?>px;
+    }
+    </style>
     <link rel="icon" href="<?= e(asset_url($logo)) ?>" type="image/png">
 </head>
 <body>
