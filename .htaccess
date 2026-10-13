@@ -6,6 +6,10 @@ RewriteBase /
     Order deny,allow
     Deny from all
 </Files>
+<FilesMatch "^(\.env|\.env\..*)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
 
 # Headers
 <IfModule mod_headers.c>

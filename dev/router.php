@@ -9,6 +9,16 @@
 $root = realpath($_SERVER['DOCUMENT_ROOT']);
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+// Never serve dotfiles (.env, .git, …) or config.php as static files.
+$rel = ltrim(urldecode((string)$path), '/');
+$base = basename($rel);
+if ($base === 'config.php' || ($base !== '' && $base[0] === '.')) {
+    http_response_code(404);
+    header('Content-Type: text/plain; charset=utf-8');
+    echo 'Not Found';
+    return true;
+}
+
 // Serve existing real files (css/js/uploads/images) directly.
 if ($path !== '/' && $path !== '') {
     $file = realpath($root . urldecode($path));
