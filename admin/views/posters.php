@@ -16,7 +16,7 @@ $rows = $db->query("SELECT * FROM posters ORDER BY sort_order, id")->fetchAll();
         <input type="hidden" name="return" value="posters">
         <div class="form-group">
             <label>Poster / certificate size (height in pixels)</label>
-            <input type="number" name="s[poster_size]" value="<?= (int)setting('poster_size') ?>" min="30" max="400" step="1">
+            <input type="number" name="s[poster_size]" value="<?= cms_setting_px('poster_size', 30, 400) ?>" min="30" max="400" step="1">
             <p class="hint">Current default is 80. Increase to make the certificates/posters bigger.</p>
         </div>
         <button class="btn btn-blue">Save Poster Size</button>

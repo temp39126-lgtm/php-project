@@ -17,16 +17,23 @@ $positions = [
 <h2 class="page-title">Banners</h2>
 <div class="card">
     <h3>Display Size</h3>
-    <p class="hint">Controls the height of the mid / bottom / other banner sliders on the site. (The full-height top slider keeps its own height.)</p>
+    <p class="hint">These heights apply on the public site immediately after you save (hard-refresh the homepage if you still see the old size).</p>
     <form method="POST">
         <input type="hidden" name="action" value="save_settings">
         <input type="hidden" name="return" value="banners">
-        <div class="form-group">
-            <label>Banner height (pixels)</label>
-            <input type="number" name="s[banner_size]" value="<?= (int)setting('banner_size') ?>" min="120" max="900" step="10">
-            <p class="hint">Current default is 380. Increase to make banners taller.</p>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Top slider height (pixels)</label>
+                <input type="number" name="s[slider_size]" value="<?= cms_setting_px('slider_size', 200, 900) ?>" min="200" max="900" step="10">
+                <p class="hint">Homepage carousel (banner position: Slider). Default 460.</p>
+            </div>
+            <div class="form-group">
+                <label>Mid / bottom banner height (pixels)</label>
+                <input type="number" name="s[banner_size]" value="<?= cms_setting_px('banner_size', 120, 900) ?>" min="120" max="900" step="10">
+                <p class="hint">Mid, bottom, and other strips. Default 380.</p>
+            </div>
         </div>
-        <button class="btn btn-blue">Save Banner Size</button>
+        <button class="btn btn-blue">Save Banner Sizes</button>
     </form>
 </div>
 <div class="card">

@@ -115,6 +115,7 @@ function cms_defaults() {
         // Display sizes (pixels) — admin-adjustable from the dashboard.
         'logo_size'            => '75',  // header logo height
         'icon_size'            => '56',  // Clean Energy / feature icon height
+        'slider_size'          => '460', // homepage top carousel (position: slider)
         'banner_size'          => '380', // mid/bottom/other banner slider height
         'poster_size'          => '80',  // certificate / poster strip image height
         'usp_size'             => '38',  // USPS ("Why Choose Us") icon size
@@ -139,12 +140,26 @@ function cms_all_settings() {
 // Get a single setting value (DB overrides default).
 function setting($key, $default = null) {
     $all = cms_all_settings();
-    if (array_key_exists($key, $all) && $all[$key] !== null) {
+    if (array_key_exists($key, $all) && $all[$key] !== null && $all[$key] !== '') {
         return $all[$key];
     }
     $defaults = cms_defaults();
     if ($default !== null) return $default;
     return $defaults[$key] ?? '';
+}
+
+// Pixel size from a setting key (empty/invalid DB values fall back to cms_defaults).
+function cms_setting_px($key, $min = 1, $max = 2000) {
+    $defaults = cms_defaults();
+    $fallback = (int)($defaults[$key] ?? 0);
+    $n = (int) setting($key);
+    if ($n < $min) {
+        $n = max($min, $fallback);
+    }
+    if ($n > $max) {
+        $n = $max;
+    }
+    return $n;
 }
 
 // Boolean flag for enable/disable toggles.

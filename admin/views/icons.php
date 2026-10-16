@@ -16,7 +16,7 @@ $rows = $db->query("SELECT * FROM icons ORDER BY sort_order, id")->fetchAll();
         <input type="hidden" name="return" value="icons">
         <div class="form-group">
             <label>Icon size (height in pixels)</label>
-            <input type="number" name="s[icon_size]" value="<?= (int)setting('icon_size') ?>" min="20" max="300" step="1">
+            <input type="number" name="s[icon_size]" value="<?= cms_setting_px('icon_size', 20, 300) ?>" min="20" max="300" step="1">
             <p class="hint">Current default is 56. Increase to make the icons bigger.</p>
         </div>
         <button class="btn btn-blue">Save Icon Size</button>

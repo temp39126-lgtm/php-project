@@ -21,14 +21,15 @@ $siteName = setting('site_name');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? e($pageTitle) . ' | ' : '' ?><?= e($siteName) ?></title>
     <meta name="description" content="<?= isset($pageDesc) ? e($pageDesc) : 'Fueling the World with India\'s Finest Energy Bars. Premium superfood energy bars.' ?>">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="<?= e(link_url('/css/style.css?v=' . @filemtime(__DIR__ . '/../css/style.css'))) ?>">
     <style>
     :root{
-        --logo-h:<?= (int)setting('logo_size') ?>px;
-        --icon-h:<?= (int)setting('icon_size') ?>px;
-        --banner-h:<?= (int)setting('banner_size') ?>px;
-        --poster-h:<?= (int)setting('poster_size') ?>px;
-        --usp-h:<?= (int)setting('usp_size') ?>px;
+        --logo-h:<?= cms_setting_px('logo_size', 20, 300) ?>px;
+        --icon-h:<?= cms_setting_px('icon_size', 20, 300) ?>px;
+        --slider-h:<?= cms_setting_px('slider_size', 200, 900) ?>px;
+        --banner-h:<?= cms_setting_px('banner_size', 120, 900) ?>px;
+        --poster-h:<?= cms_setting_px('poster_size', 30, 400) ?>px;
+        --usp-h:<?= cms_setting_px('usp_size', 16, 200) ?>px;
     }
     </style>
     <link rel="icon" href="<?= e(asset_url($logo)) ?>" type="image/png">

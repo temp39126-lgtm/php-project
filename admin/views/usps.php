@@ -16,7 +16,7 @@ $rows = $db->query("SELECT * FROM usps ORDER BY sort_order, id")->fetchAll();
         <input type="hidden" name="return" value="usps">
         <div class="form-group">
             <label>USP icon size (pixels)</label>
-            <input type="number" name="s[usp_size]" value="<?= (int)setting('usp_size') ?>" min="16" max="200" step="1">
+            <input type="number" name="s[usp_size]" value="<?= cms_setting_px('usp_size', 16, 200) ?>" min="16" max="200" step="1">
             <p class="hint">Current default is 38. The circular badge grows automatically with the icon.</p>
         </div>
         <button class="btn btn-blue">Save USP Size</button>
