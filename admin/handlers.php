@@ -28,18 +28,46 @@ switch ($action) {
 
     // ---------- Settings groups (homepage, header, footer, etc.) ----------
     case 'save_settings':
-        foreach (($_POST['s'] ?? []) as $k => $v) {
-            set_setting((string)$k, is_array($v) ? implode(',', $v) : (string)$v);
-        }
-        // Image settings uploaded as file_<key>.
-        foreach ($_FILES as $field => $info) {
-            if (strpos($field, 'file_') === 0 && !empty($info['name'])) {
+        $clamped = [];
+        try {
+            foreach (($_POST['s'] ?? []) as $k => $v) {
+                $key = (string) $k;
+                if (is_array($v)) {
+                    $val = implode(',', $v);
+                    $wasClamped = false;
+                } elseif (function_exists('cms_clamp_size_setting') && isset(cms_size_specs()[$key])) {
+                    [$val, $wasClamped] = cms_clamp_size_setting($key, $v);
+                    if ($wasClamped) {
+                        $clamped[] = $key;
+                    }
+                } else {
+                    $val = (string) $v;
+                }
+                set_setting($key, $val);
+            }
+            // Image settings uploaded as file_<key>.
+            foreach ($_FILES as $field => $info) {
+                if (strpos($field, 'file_') !== 0 || empty($info['name'])) {
+                    continue;
+                }
+                if (!empty($info['error']) && (int) $info['error'] !== UPLOAD_ERR_OK) {
+                    continue;
+                }
                 $key = substr($field, 5);
                 $path = uploadImage($info, 'cms');
-                if ($path) set_setting($key, $path);
+                if ($path) {
+                    set_setting($key, $path);
+                }
             }
+        } catch (Throwable $e) {
+            error_log('GritFitNutri save_settings failed: ' . $e->getMessage());
+            admin_redirect($ret ?: 'homepage', 'Could not save settings. If you uploaded an image, try a smaller JPG/PNG file.');
         }
-        admin_redirect($ret ?: 'homepage', 'Settings saved.');
+        $msg = 'Settings saved.';
+        if ($clamped) {
+            $msg .= ' Some sizes were adjusted to allowed limits (min/max).';
+        }
+        admin_redirect($ret ?: 'homepage', $msg);
 
     // ---------- Categories ----------
     case 'save_category': {

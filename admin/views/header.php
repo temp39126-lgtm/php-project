@@ -27,8 +27,8 @@ $menu = $db->query("SELECT * FROM menu_items ORDER BY sort_order, id")->fetchAll
         </div>
         <div class="form-group">
             <label>Logo size (height in pixels)</label>
-            <input type="number" name="s[logo_size]" value="<?= cms_setting_px('logo_size', 20, 300) ?>" min="20" max="300" step="1">
-            <p class="hint">Current default is 75. Increase to make the header logo bigger.</p>
+            <input type="number" name="s[logo_size]" value="<?= cms_setting_px('logo_size', 20, 500) ?>" min="20" max="500" step="1">
+            <p class="hint">Allowed range 20–500 px (default 75). Values above 500 are saved as 500.</p>
         </div>
         <button class="btn btn-blue">Save Logo &amp; Identity</button>
     </form>

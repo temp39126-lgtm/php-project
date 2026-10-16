@@ -69,13 +69,35 @@ function slugify($text) {
 }
 
 function uploadImage($file, $subfolder = 'products') {
-    if ($file['error'] !== UPLOAD_ERR_OK) return false;
-    if ($file['size'] > MAX_IMAGE_SIZE) return false;
-    
+    if (!is_array($file) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        return false;
+    }
+    if (($file['size'] ?? 0) > MAX_IMAGE_SIZE) {
+        return false;
+    }
+    if (empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
+        return false;
+    }
+
     $allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mime = $finfo->file($file['tmp_name']);
-    if (!in_array($mime, $allowed)) return false;
+    $mime = '';
+    if (class_exists('finfo')) {
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = (string) $finfo->file($file['tmp_name']);
+    }
+    if ($mime === '' || !in_array($mime, $allowed, true)) {
+        $ext = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
+        $mime = match ($ext) {
+            'jpg', 'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'webp' => 'image/webp',
+            'avif' => 'image/avif',
+            default => '',
+        };
+    }
+    if ($mime === '' || !in_array($mime, $allowed, true)) {
+        return false;
+    }
     
     $dir = UPLOAD_DIR . $subfolder . '/';
     if (!is_dir($dir)) mkdir($dir, 0755, true);
@@ -84,11 +106,15 @@ function uploadImage($file, $subfolder = 'products') {
     $filename = uniqid() . '_' . time() . '.' . $ext;
     $path = $dir . $filename;
     
-    if (move_uploaded_file($file['tmp_name'], $path)) {
-        optimizeImage($path, $mime);
-        return 'uploads/' . $subfolder . '/' . $filename;
+    if (!move_uploaded_file($file['tmp_name'], $path)) {
+        return false;
     }
-    return false;
+    try {
+        optimizeImage($path, $mime);
+    } catch (Throwable $e) {
+        error_log('GritFitNutri optimizeImage: ' . $e->getMessage());
+    }
+    return 'uploads/' . $subfolder . '/' . $filename;
 }
 
 function optimizeImage($path, $mime) {

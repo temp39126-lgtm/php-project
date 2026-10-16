@@ -123,17 +123,36 @@ function cms_defaults() {
     return $d;
 }
 
-// Load all settings from DB once per request.
-function cms_all_settings() {
-    static $cache = null;
-    if ($cache !== null) return $cache;
+// Bump when settings change so cms_all_settings() reloads in the same request.
+$GLOBALS['_cms_settings_gen'] = 0;
+
+function cms_fetch_settings_from_db() {
     $cache = [];
     try {
         $rows = getDB()->query("SELECT skey, svalue FROM settings")->fetchAll();
-        foreach ($rows as $r) $cache[$r['skey']] = $r['svalue'];
+        foreach ($rows as $r) {
+            $cache[$r['skey']] = $r['svalue'];
+        }
     } catch (Exception $e) {
         $cache = [];
     }
+    return $cache;
+}
+
+function cms_bump_settings_cache() {
+    $GLOBALS['_cms_settings_gen'] = ($GLOBALS['_cms_settings_gen'] ?? 0) + 1;
+}
+
+// Load all settings from DB once per request (refreshed after cms_bump_settings_cache()).
+function cms_all_settings() {
+    static $cache = null;
+    static $loadedGen = -1;
+    $gen = $GLOBALS['_cms_settings_gen'] ?? 0;
+    if ($cache !== null && $loadedGen === $gen) {
+        return $cache;
+    }
+    $cache = cms_fetch_settings_from_db();
+    $loadedGen = $gen;
     return $cache;
 }
 
@@ -165,7 +184,7 @@ function cms_setting_px($key, $min = 1, $max = 2000) {
 // All admin-adjustable display sizes (setting key => [min, max]).
 function cms_size_specs() {
     return [
-        'logo_size'   => [20, 300],
+        'logo_size'   => [20, 500],
         'icon_size'   => [20, 300],
         'slider_size' => [200, 900],
         'banner_size' => [120, 900],
@@ -184,12 +203,28 @@ function cms_size_css_variables() {
         'poster_size' => '--poster-h',
         'usp_size'    => '--usp-h',
     ];
+    $specs = cms_size_specs();
     $parts = [];
     foreach ($map as $key => $var) {
-        [$min, $max] = cms_size_specs()[$key];
+        if (!isset($specs[$key])) {
+            continue;
+        }
+        [$min, $max] = $specs[$key];
         $parts[] = $var . ':' . cms_setting_px($key, $min, $max) . 'px';
     }
     return implode(';', $parts);
+}
+
+// Clamp a posted size value before saving (returns [value, was_clamped]).
+function cms_clamp_size_setting($key, $value) {
+    $specs = cms_size_specs();
+    if (!isset($specs[$key])) {
+        return [(string) $value, false];
+    }
+    [$min, $max] = $specs[$key];
+    $n = (int) $value;
+    $clamped = max($min, min($max, $n));
+    return [(string) $clamped, $clamped !== $n];
 }
 
 // Boolean flag for enable/disable toggles.
@@ -205,6 +240,7 @@ function set_setting($key, $value) {
          ON DUPLICATE KEY UPDATE svalue = VALUES(svalue)"
     );
     $stmt->execute([$key, $value]);
+    cms_bump_settings_cache();
 }
 
 // Fetch ordered rows from a CMS table.

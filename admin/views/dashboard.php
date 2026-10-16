@@ -18,7 +18,7 @@ $stats = [
     <p class="hint">Values below are what the public site uses right now (from saved settings). Edit each section in the sidebar, then hard-refresh the homepage.</p>
     <table>
         <tr><th>What</th><th>Pixels</th><th>Edit in</th></tr>
-        <tr><td>Logo height</td><td><?= cms_setting_px('logo_size', 20, 300) ?></td><td><a href="<?= e(adm('header')) ?>">Header</a></td></tr>
+        <tr><td>Logo height</td><td><?= cms_setting_px('logo_size', 20, 500) ?></td><td><a href="<?= e(adm('header')) ?>">Header</a></td></tr>
         <tr><td>Top slider</td><td><?= cms_setting_px('slider_size', 200, 900) ?></td><td><a href="<?= e(adm('banners')) ?>">Banners</a></td></tr>
         <tr><td>Mid / bottom banners</td><td><?= cms_setting_px('banner_size', 120, 900) ?></td><td><a href="<?= e(adm('banners')) ?>">Banners</a></td></tr>
         <tr><td>Clean Energy icons</td><td><?= cms_setting_px('icon_size', 20, 300) ?></td><td><a href="<?= e(adm('icons')) ?>">Icons</a></td></tr>
