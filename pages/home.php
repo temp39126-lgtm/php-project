@@ -16,7 +16,7 @@ foreach ($order as $section):
     // ---------------- HERO ----------------
     case 'hero':
         // Banners assigned to the "Hero area" position render here as a slider.
-        render_banner_slider('hero', '');
+        render_banner_slider('hero', 'banner-slider');
         if (!cms_flag('hero_enabled')) break;
         $heroImg = setting('hero_image');
         ?>

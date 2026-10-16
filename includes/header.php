@@ -22,16 +22,7 @@ $siteName = setting('site_name');
     <title><?= isset($pageTitle) ? e($pageTitle) . ' | ' : '' ?><?= e($siteName) ?></title>
     <meta name="description" content="<?= isset($pageDesc) ? e($pageDesc) : 'Fueling the World with India\'s Finest Energy Bars. Premium superfood energy bars.' ?>">
     <link rel="stylesheet" href="<?= e(link_url('/css/style.css?v=' . @filemtime(__DIR__ . '/../css/style.css'))) ?>">
-    <style>
-    :root{
-        --logo-h:<?= cms_setting_px('logo_size', 20, 300) ?>px;
-        --icon-h:<?= cms_setting_px('icon_size', 20, 300) ?>px;
-        --slider-h:<?= cms_setting_px('slider_size', 200, 900) ?>px;
-        --banner-h:<?= cms_setting_px('banner_size', 120, 900) ?>px;
-        --poster-h:<?= cms_setting_px('poster_size', 30, 400) ?>px;
-        --usp-h:<?= cms_setting_px('usp_size', 16, 200) ?>px;
-    }
-    </style>
+    <style>:root{<?= cms_size_css_variables() ?>}</style>
     <link rel="icon" href="<?= e(asset_url($logo)) ?>" type="image/png">
 </head>
 <body>

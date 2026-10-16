@@ -162,6 +162,36 @@ function cms_setting_px($key, $min = 1, $max = 2000) {
     return $n;
 }
 
+// All admin-adjustable display sizes (setting key => [min, max]).
+function cms_size_specs() {
+    return [
+        'logo_size'   => [20, 300],
+        'icon_size'   => [20, 300],
+        'slider_size' => [200, 900],
+        'banner_size' => [120, 900],
+        'poster_size' => [30, 400],
+        'usp_size'    => [16, 200],
+    ];
+}
+
+// Inline :root CSS variables consumed by css/style.css.
+function cms_size_css_variables() {
+    $map = [
+        'logo_size'   => '--logo-h',
+        'icon_size'   => '--icon-h',
+        'slider_size' => '--slider-h',
+        'banner_size' => '--banner-h',
+        'poster_size' => '--poster-h',
+        'usp_size'    => '--usp-h',
+    ];
+    $parts = [];
+    foreach ($map as $key => $var) {
+        [$min, $max] = cms_size_specs()[$key];
+        $parts[] = $var . ':' . cms_setting_px($key, $min, $max) . 'px';
+    }
+    return implode(';', $parts);
+}
+
 // Boolean flag for enable/disable toggles.
 function cms_flag($key) {
     $v = setting($key);
