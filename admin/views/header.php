@@ -43,6 +43,11 @@ $menu = $db->query("SELECT * FROM menu_items ORDER BY sort_order, id")->fetchAll
         <div class="form-group"><label class="chk"><input type="hidden" name="s[adbar_enabled]" value="0"><input type="checkbox" name="s[adbar_enabled]" value="1" <?= cms_flag('adbar_enabled') ? 'checked' : '' ?>> Show advertisement bar</label></div>
         <div class="form-group"><label>Advertisement Text</label><input type="text" name="s[adbar_text]" value="<?= e(setting('adbar_text')) ?>"></div>
         <div class="form-group"><label>Link (optional — makes the bar clickable)</label><input type="text" name="s[adbar_link]" value="<?= e(setting('adbar_link')) ?>" placeholder="/products or https://..."></div>
+        <div class="form-group">
+            <label>Scroll speed (seconds per cycle)</label>
+            <input type="number" name="s[adbar_scroll_sec]" value="<?= cms_adbar_scroll_sec() > 0 ? e((string) cms_adbar_scroll_sec()) : '0' ?>" min="0" max="120" step="0.5">
+            <p class="hint">How long it takes the message to move across the bar once. Lower = faster (5–120). Use <strong>0</strong> for centered static text with no scrolling.</p>
+        </div>
         <button class="btn btn-blue">Save Advertisement Bar</button>
     </form>
 </div>
