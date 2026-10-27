@@ -21,6 +21,7 @@ $stats = [
         <tr><td>Logo height</td><td><?= cms_setting_px('logo_size', 20, 500) ?></td><td><a href="<?= e(adm('header')) ?>">Header</a></td></tr>
         <tr><td>Top slider</td><td><?= cms_setting_px('slider_size', 200, 900) ?></td><td><a href="<?= e(adm('banners')) ?>">Banners</a></td></tr>
         <tr><td>Mid / bottom banners</td><td><?= cms_setting_px('banner_size', 120, 900) ?></td><td><a href="<?= e(adm('banners')) ?>">Banners</a></td></tr>
+        <tr><td>Slide autoplay speed</td><td><?= (int) round(cms_slider_interval_ms() / 100) / 10 ?> s</td><td><a href="<?= e(adm('banners')) ?>">Banners</a></td></tr>
         <tr><td>Clean Energy icons</td><td><?= cms_setting_px('icon_size', 20, 300) ?></td><td><a href="<?= e(adm('icons')) ?>">Icons</a></td></tr>
         <tr><td>Posters / certificates</td><td><?= cms_setting_px('poster_size', 30, 400) ?></td><td><a href="<?= e(adm('posters')) ?>">Posters</a></td></tr>
         <tr><td>USP icons</td><td><?= cms_setting_px('usp_size', 16, 200) ?></td><td><a href="<?= e(adm('usps')) ?>">USPS</a></td></tr>

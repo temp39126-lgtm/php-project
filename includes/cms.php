@@ -119,6 +119,9 @@ function cms_defaults() {
         'banner_size'          => '380', // mid/bottom/other banner slider height
         'poster_size'          => '80',  // certificate / poster strip image height
         'usp_size'             => '38',  // USPS ("Why Choose Us") icon size
+
+        // Autoplay interval for all .hero-slider carousels (milliseconds).
+        'slider_speed_ms'      => '5500',
     ];
     return $d;
 }
@@ -179,6 +182,31 @@ function cms_setting_px($key, $min = 1, $max = 2000) {
         $n = $max;
     }
     return $n;
+}
+
+// Autoplay interval for banner/slide carousels (milliseconds).
+function cms_slider_interval_ms() {
+    $defaults = cms_defaults();
+    $fallback = (int) ($defaults['slider_speed_ms'] ?? 5500);
+    $min = 2000;
+    $max = 60000;
+    $n = (int) setting('slider_speed_ms');
+    if ($n < $min) {
+        $n = max($min, $fallback);
+    }
+    if ($n > $max) {
+        $n = $max;
+    }
+    return $n;
+}
+
+// Clamp posted autoplay speed before saving (returns [value, was_clamped]).
+function cms_clamp_slider_speed_ms($value) {
+    $min = 2000;
+    $max = 60000;
+    $n = (int) $value;
+    $clamped = max($min, min($max, $n));
+    return [(string) $clamped, $clamped !== $n];
 }
 
 // All admin-adjustable display sizes (setting key => [min, max]).
@@ -270,7 +298,8 @@ function render_banner_slider($position, $extraClass = 'banner-slider') {
     if (empty($banners)) return;
     $multi = count($banners) > 1;
     $cls = trim('hero-slider ' . $extraClass);
-    echo '<section class="' . e($cls) . '"><div class="slides">';
+    $intervalMs = cms_slider_interval_ms();
+    echo '<section class="' . e($cls) . '" data-interval="' . (int) $intervalMs . '"><div class="slides">';
     foreach ($banners as $idx => $b) {
         echo '<div class="slide ' . ($idx === 0 ? 'active' : '') . '">';
         if (!empty($b['video'])) {

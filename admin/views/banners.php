@@ -33,7 +33,12 @@ $positions = [
                 <p class="hint">Mid, bottom, and other strips. Default 380.</p>
             </div>
         </div>
-        <button class="btn btn-blue">Save Banner Sizes</button>
+        <div class="form-group">
+            <label>Slide autoplay speed (seconds)</label>
+            <input type="number" name="s[slider_speed_sec]" value="<?= (int) round(cms_slider_interval_ms() / 100) / 10 ?>" min="2" max="60" step="0.5">
+            <p class="hint">How long each slide stays visible before advancing (2–60 seconds). Applies to the top slider and all banner carousels. Default 5.5.</p>
+        </div>
+        <button class="btn btn-blue">Save Banner Settings</button>
     </form>
 </div>
 <div class="card">
