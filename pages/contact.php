@@ -8,9 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf'])) {
         $email = trim($_POST['email'] ?? '');
         $phone = trim($_POST['phone'] ?? '');
         $message = trim($_POST['message'] ?? '');
-        if ($name && $email && $message) {
+        if ($name && $email && $message && filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $stmt = $db->prepare("INSERT INTO enquiries (name, email, phone, message) VALUES (?, ?, ?, ?)");
             $stmt->execute([$name, $email, $phone, $message]);
+            send_contact_form_email($name, $email, $phone, $message);
             $msg = 'success';
         }
     }

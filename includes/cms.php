@@ -99,7 +99,7 @@ function cms_defaults() {
         'footer_copy'          => '© ' . date('Y') . '. All rights reserved.',
 
         // Contact / social (shared)
-        'contact_email'        => $c('SITE_EMAIL', 'contact@gritfitnutri.in'),
+        'contact_email'        => $c('SITE_EMAIL', 'info@gritfitnutri.com'),
         'contact_phone'        => $c('SITE_PHONE', '+91 9811242068'),
         'contact_whatsapp'     => $c('WHATSAPP_NUMBER', '919811242068'),
         'contact_address'      => $c('SITE_ADDRESS', 'B-161, 3rd Floor, Lok Vihar, Pitampura, New Delhi, 110034'),
