@@ -22,10 +22,10 @@ $siteName = setting('site_name');
     <title><?= isset($pageTitle) ? e($pageTitle) . ' | ' : '' ?><?= e($siteName) ?></title>
     <meta name="description" content="<?= isset($pageDesc) ? e($pageDesc) : 'Fueling the World with India\'s Finest Energy Bars. Premium superfood energy bars.' ?>">
     <link rel="stylesheet" href="<?= e(link_url('/css/style.css?v=' . @filemtime(__DIR__ . '/../css/style.css'))) ?>">
-    <style>:root{<?= cms_size_css_variables() ?>}</style>
+    <style>:root{<?= function_exists('cms_storefront_css_variables') ? cms_storefront_css_variables() : cms_size_css_variables() ?>}</style>
     <link rel="icon" href="<?= e(asset_url($logo)) ?>" type="image/png">
 </head>
-<body>
+<body class="page-<?= e(preg_replace('~[^a-z0-9_-]~', '', $page ?? 'home')) ?>">
     <?php if (cms_flag('adbar_enabled') && setting('adbar_text') !== ''): ?>
     <div class="announcement-bar">
         <?php if (setting('adbar_link')): ?><a href="<?= e(link_url(setting('adbar_link'))) ?>"><?= e(setting('adbar_text')) ?></a>

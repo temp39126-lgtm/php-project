@@ -1,63 +1,99 @@
-<?php $pageTitle = "About Us"; ?>
+<?php
+$pageTitle = setting('about_hero_title') ?: 'About Us';
+$pageDesc = setting('about_intro');
+?>
 
 <section class="page-hero">
-    <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-dJo5gEZMqxU6QJ28.jpg" alt="About Us">
+    <?php if (setting('about_hero_image')): ?>
+    <img src="<?= e(asset_url(setting('about_hero_image'))) ?>" alt="<?= e($pageTitle) ?>">
+    <?php endif; ?>
     <div class="page-hero-overlay"></div>
-    <h1>About Us</h1>
+    <h1><?= e($pageTitle) ?></h1>
 </section>
 
+<?php if (trim(setting('about_intro')) !== ''): ?>
 <section class="section">
     <div class="container">
         <div class="about-intro">
-            <p>At Grit Fit Nutri, our mission is to revolutionize healthy living by providing high-quality, preservative-free superfood energy bars that fuel an active lifestyle. Committed to excellence, we ensure every product is lab-tested and made with the finest natural ingredients. Expanding globally, we aim to bring our nutritious offerings to international markets through strategic exports.</p>
+            <p><?= nl2br(e(setting('about_intro'))) ?></p>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
+<?php if (trim(setting('about_who_text')) !== '' || trim(setting('about_vision_text')) !== ''): ?>
 <section class="section" style="padding-top:0">
     <div class="container">
         <div class="about-grid">
+            <?php if (trim(setting('about_who_text')) !== ''): ?>
             <div>
-                <h3>Who Are We?</h3>
-                <p>We are people who have witnessed the imbalance in the life of working professionals as they turned to poor eating habits and stress eating. Therefore, we came to the conclusion to change it by taking the right action. At Gritfit, we focus on developing goods that can solve a number of health issues while being incredibly tasty.</p>
+                <?php if (setting('about_who_title')): ?><h3><?= e(setting('about_who_title')) ?></h3><?php endif; ?>
+                <p><?= nl2br(e(setting('about_who_text'))) ?></p>
             </div>
+            <?php endif; ?>
+            <?php if (trim(setting('about_vision_text')) !== ''): ?>
             <div>
-                <h3>Our Vision</h3>
-                <p>At Grit Fit Nutri, our mission is to promote a healthier lifestyle by delivering premium, preservative-free superfood energy bars packed with natural nutrition. We are committed to quality, innovation, and sustainability, ensuring that our products meet global standards.</p>
+                <?php if (setting('about_vision_title')): ?><h3><?= e(setting('about_vision_title')) ?></h3><?php endif; ?>
+                <p><?= nl2br(e(setting('about_vision_text'))) ?></p>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
+<?php endif; ?>
 
+<?php if (setting('about_banner_image')): ?>
 <div class="banner-section">
-    <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-Yleqa574RZUoMZPw.jpg" alt="Products" class="banner-full">
+    <img src="<?= e(asset_url(setting('about_banner_image'))) ?>" alt="<?= e(setting('about_banner_alt')) ?>" class="banner-full">
 </div>
+<?php endif; ?>
 
+<?php
+$aboutBlocks = [
+    [
+        'title' => setting('about_block1_title'),
+        'text'  => setting('about_block1_text'),
+        'subs'  => [],
+    ],
+    [
+        'title' => setting('about_block2_title'),
+        'text'  => setting('about_block2_text'),
+        'subs'  => [
+            ['title' => setting('about_block2_sub1_title'), 'text' => setting('about_block2_sub1_text')],
+            ['title' => setting('about_block2_sub2_title'), 'text' => setting('about_block2_sub2_text')],
+        ],
+    ],
+    [
+        'title' => setting('about_block3_title'),
+        'text'  => setting('about_block3_text'),
+        'subs'  => [
+            ['title' => setting('about_block3_sub1_title'), 'text' => setting('about_block3_sub1_text')],
+            ['title' => setting('about_block3_sub2_title'), 'text' => setting('about_block3_sub2_text')],
+        ],
+    ],
+];
+foreach ($aboutBlocks as $block):
+    $hasBody = trim($block['text']) !== '';
+    foreach ($block['subs'] as $sub) {
+        if (trim($sub['text']) !== '') {
+            $hasBody = true;
+            break;
+        }
+    }
+    if (trim($block['title']) === '' && !$hasBody) {
+        continue;
+    }
+?>
 <div class="about-detail-section">
     <div class="container"><div class="about-detail-content">
-        <h5>GritFit Nutri – Your Trusted Partner for Global Nutrition Exports</h5>
-        <p>GritFit Nutri is a leading manufacturer of premium nutritional products, specializing in white-label and private-label solutions. With world-class production facilities, stringent quality standards, and a commitment to international markets, we empower businesses to scale globally with confidence.</p>
+        <?php if (trim($block['title']) !== ''): ?><h5><?= e($block['title']) ?></h5><?php endif; ?>
+        <?php if (trim($block['text']) !== ''): ?><p><?= nl2br(e($block['text'])) ?></p><?php endif; ?>
+        <?php foreach ($block['subs'] as $sub):
+            if (trim($sub['text']) === '' && trim($sub['title']) === '') continue;
+        ?>
+            <?php if (trim($sub['title']) !== ''): ?><h6><?= e($sub['title']) ?></h6><?php endif; ?>
+            <?php if (trim($sub['text']) !== ''): ?><p><?= nl2br(e($sub['text'])) ?></p><?php endif; ?>
+        <?php endforeach; ?>
     </div></div>
 </div>
-
-<div class="about-detail-section">
-    <div class="container"><div class="about-detail-content">
-        <h5>Scalable Manufacturing &amp; Quality Assurance</h5>
-        <p>Our state-of-the-art facilities are designed to meet high-volume demands while maintaining exceptional quality.</p>
-        <h6>Global Compliance &amp; Certifications</h6>
-        <p>FDA-approved, GMP-certified, and compliant with ISO, HACCP, Kosher, and Halal standards.</p>
-        <h6>Custom Manufacturing Solutions</h6>
-        <p>Tailored formulations and flexible production capabilities to meet unique global market requirements.</p>
-    </div></div>
-</div>
-
-<div class="about-detail-section">
-    <div class="container"><div class="about-detail-content">
-        <h5>White-Label &amp; Private-Label Solutions for Global Expansion</h5>
-        <p>We provide comprehensive private-label and white-label solutions to businesses worldwide.</p>
-        <h6>Tailored Product Development</h6>
-        <p>Custom formulations aligned with international market preferences.</p>
-        <h6>Institutional &amp; Retail Partnerships</h6>
-        <p>Open to direct tie-ups with supermarket and convenience store chains, aviation sector, HoReCa, and institutional sales.</p>
-    </div></div>
-</div>
+<?php endforeach; ?>

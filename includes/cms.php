@@ -71,6 +71,31 @@ function cms_defaults() {
         'abouthome_btn_text'   => 'Learn More',
         'abouthome_btn_link'   => '/about-us',
 
+        // About Us page (/about-us)
+        'about_hero_image'     => 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-dJo5gEZMqxU6QJ28.jpg',
+        'about_hero_title'     => 'About Us',
+        'about_intro'          => 'At Grit Fit Nutri, our mission is to revolutionize healthy living by providing high-quality, preservative-free superfood energy bars that fuel an active lifestyle. Committed to excellence, we ensure every product is lab-tested and made with the finest natural ingredients. Expanding globally, we aim to bring our nutritious offerings to international markets through strategic exports.',
+        'about_who_title'      => 'Who Are We?',
+        'about_who_text'       => 'We are people who have witnessed the imbalance in the life of working professionals as they turned to poor eating habits and stress eating. Therefore, we came to the conclusion to change it by taking the right action. At Gritfit, we focus on developing goods that can solve a number of health issues while being incredibly tasty.',
+        'about_vision_title'   => 'Our Vision',
+        'about_vision_text'    => 'At Grit Fit Nutri, our mission is to promote a healthier lifestyle by delivering premium, preservative-free superfood energy bars packed with natural nutrition. We are committed to quality, innovation, and sustainability, ensuring that our products meet global standards.',
+        'about_banner_image'   => 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-Yleqa574RZUoMZPw.jpg',
+        'about_banner_alt'     => 'Products',
+        'about_block1_title'   => 'GritFit Nutri – Your Trusted Partner for Global Nutrition Exports',
+        'about_block1_text'    => 'GritFit Nutri is a leading manufacturer of premium nutritional products, specializing in white-label and private-label solutions. With world-class production facilities, stringent quality standards, and a commitment to international markets, we empower businesses to scale globally with confidence.',
+        'about_block2_title'   => 'Scalable Manufacturing & Quality Assurance',
+        'about_block2_text'    => 'Our state-of-the-art facilities are designed to meet high-volume demands while maintaining exceptional quality.',
+        'about_block2_sub1_title' => 'Global Compliance & Certifications',
+        'about_block2_sub1_text'  => 'FDA-approved, GMP-certified, and compliant with ISO, HACCP, Kosher, and Halal standards.',
+        'about_block2_sub2_title' => 'Custom Manufacturing Solutions',
+        'about_block2_sub2_text'  => 'Tailored formulations and flexible production capabilities to meet unique global market requirements.',
+        'about_block3_title'   => 'White-Label & Private-Label Solutions for Global Expansion',
+        'about_block3_text'    => 'We provide comprehensive private-label and white-label solutions to businesses worldwide.',
+        'about_block3_sub1_title' => 'Tailored Product Development',
+        'about_block3_sub1_text'  => 'Custom formulations aligned with international market preferences.',
+        'about_block3_sub2_title' => 'Institutional & Retail Partnerships',
+        'about_block3_sub2_text'  => 'Open to direct tie-ups with supermarket and convenience store chains, aviation sector, HoReCa, and institutional sales.',
+
         // USPS section
         'usps_enabled'         => '1',
         'usps_title'           => 'Why Choose Us',
@@ -120,6 +145,9 @@ function cms_defaults() {
         'poster_size'          => '80',  // certificate / poster strip image height
         'usp_size'             => '38',  // USPS ("Why Choose Us") icon size
     ];
+    if (function_exists('cms_theme_default_settings')) {
+        $d = array_merge($d, cms_theme_default_settings());
+    }
     return $d;
 }
 
@@ -352,3 +380,5 @@ function link_url($url) {
     }
     return '/' . ltrim($url, '/');
 }
+
+require_once __DIR__ . '/cms_theme.php';
