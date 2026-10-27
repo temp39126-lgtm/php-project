@@ -42,6 +42,7 @@ $navSections = [
     'dashboard'    => ['📊', 'Dashboard'],
     'homepage'     => ['🏠', 'Homepage'],
     'header'       => ['🔝', 'Header / Menu / Ad Bar'],
+    'about'        => ['ℹ️', 'About Us Page'],
     'categories'   => ['📁', 'Categories'],
     'products'     => ['📦', 'Products'],
     'banners'      => ['🖼️', 'Banners'],
