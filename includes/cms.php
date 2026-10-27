@@ -33,6 +33,7 @@ function cms_defaults() {
         'adbar_enabled'        => '1',
         'adbar_text'           => "Fueling the World with India's Finest Energy Bars.",
         'adbar_link'           => '',
+        'adbar_scroll_sec'     => '25', // one marquee cycle; 0 = static centered text
 
         // Slider / carousel (homepage top)
         'slider_enabled'       => '1',
@@ -71,6 +72,31 @@ function cms_defaults() {
         'abouthome_btn_text'   => 'Learn More',
         'abouthome_btn_link'   => '/about-us',
 
+        // About Us page (/about-us)
+        'about_hero_image'     => 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-dJo5gEZMqxU6QJ28.jpg',
+        'about_hero_title'     => 'About Us',
+        'about_intro'          => 'At Grit Fit Nutri, our mission is to revolutionize healthy living by providing high-quality, preservative-free superfood energy bars that fuel an active lifestyle. Committed to excellence, we ensure every product is lab-tested and made with the finest natural ingredients. Expanding globally, we aim to bring our nutritious offerings to international markets through strategic exports.',
+        'about_who_title'      => 'Who Are We?',
+        'about_who_text'       => 'We are people who have witnessed the imbalance in the life of working professionals as they turned to poor eating habits and stress eating. Therefore, we came to the conclusion to change it by taking the right action. At Gritfit, we focus on developing goods that can solve a number of health issues while being incredibly tasty.',
+        'about_vision_title'   => 'Our Vision',
+        'about_vision_text'    => 'At Grit Fit Nutri, our mission is to promote a healthier lifestyle by delivering premium, preservative-free superfood energy bars packed with natural nutrition. We are committed to quality, innovation, and sustainability, ensuring that our products meet global standards.',
+        'about_banner_image'   => 'https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/silemQfqUS99dRJ2/collective-combination-1024x402-Yleqa574RZUoMZPw.jpg',
+        'about_banner_alt'     => 'Products',
+        'about_block1_title'   => 'GritFit Nutri – Your Trusted Partner for Global Nutrition Exports',
+        'about_block1_text'    => 'GritFit Nutri is a leading manufacturer of premium nutritional products, specializing in white-label and private-label solutions. With world-class production facilities, stringent quality standards, and a commitment to international markets, we empower businesses to scale globally with confidence.',
+        'about_block2_title'   => 'Scalable Manufacturing & Quality Assurance',
+        'about_block2_text'    => 'Our state-of-the-art facilities are designed to meet high-volume demands while maintaining exceptional quality.',
+        'about_block2_sub1_title' => 'Global Compliance & Certifications',
+        'about_block2_sub1_text'  => 'FDA-approved, GMP-certified, and compliant with ISO, HACCP, Kosher, and Halal standards.',
+        'about_block2_sub2_title' => 'Custom Manufacturing Solutions',
+        'about_block2_sub2_text'  => 'Tailored formulations and flexible production capabilities to meet unique global market requirements.',
+        'about_block3_title'   => 'White-Label & Private-Label Solutions for Global Expansion',
+        'about_block3_text'    => 'We provide comprehensive private-label and white-label solutions to businesses worldwide.',
+        'about_block3_sub1_title' => 'Tailored Product Development',
+        'about_block3_sub1_text'  => 'Custom formulations aligned with international market preferences.',
+        'about_block3_sub2_title' => 'Institutional & Retail Partnerships',
+        'about_block3_sub2_text'  => 'Open to direct tie-ups with supermarket and convenience store chains, aviation sector, HoReCa, and institutional sales.',
+
         // USPS section
         'usps_enabled'         => '1',
         'usps_title'           => 'Why Choose Us',
@@ -99,7 +125,7 @@ function cms_defaults() {
         'footer_copy'          => '© ' . date('Y') . '. All rights reserved.',
 
         // Contact / social (shared)
-        'contact_email'        => $c('SITE_EMAIL', 'contact@gritfitnutri.in'),
+        'contact_email'        => $c('SITE_EMAIL', 'info@gritfitnutri.com'),
         'contact_phone'        => $c('SITE_PHONE', '+91 9811242068'),
         'contact_whatsapp'     => $c('WHATSAPP_NUMBER', '919811242068'),
         'contact_address'      => $c('SITE_ADDRESS', 'B-161, 3rd Floor, Lok Vihar, Pitampura, New Delhi, 110034'),
@@ -119,7 +145,13 @@ function cms_defaults() {
         'banner_size'          => '380', // mid/bottom/other banner slider height
         'poster_size'          => '80',  // certificate / poster strip image height
         'usp_size'             => '38',  // USPS ("Why Choose Us") icon size
+
+        // Autoplay interval for all .hero-slider carousels (milliseconds).
+        'slider_speed_ms'      => '5500',
     ];
+    if (function_exists('cms_theme_default_settings')) {
+        $d = array_merge($d, cms_theme_default_settings());
+    }
     return $d;
 }
 
@@ -179,6 +211,66 @@ function cms_setting_px($key, $min = 1, $max = 2000) {
         $n = $max;
     }
     return $n;
+}
+
+// Autoplay interval for banner/slide carousels (milliseconds).
+function cms_slider_interval_ms() {
+    $defaults = cms_defaults();
+    $fallback = (int) ($defaults['slider_speed_ms'] ?? 5500);
+    $min = 2000;
+    $max = 60000;
+    $n = (int) setting('slider_speed_ms');
+    if ($n < $min) {
+        $n = max($min, $fallback);
+    }
+    if ($n > $max) {
+        $n = $max;
+    }
+    return $n;
+}
+
+// Clamp posted autoplay speed before saving (returns [value, was_clamped]).
+function cms_clamp_slider_speed_ms($value) {
+    $min = 2000;
+    $max = 60000;
+    $n = (int) $value;
+    $clamped = max($min, min($max, $n));
+    return [(string) $clamped, $clamped !== $n];
+}
+
+// Announcement bar scroll cycle time in seconds (0 = no animation).
+function cms_adbar_scroll_sec() {
+    $defaults = cms_defaults();
+    $fallback = (float) ($defaults['adbar_scroll_sec'] ?? 25);
+    $raw = setting('adbar_scroll_sec');
+    if ($raw === '' || $raw === null) {
+        return $fallback;
+    }
+    $n = (float) $raw;
+    if ($n <= 0) {
+        return 0.0;
+    }
+    $min = 5.0;
+    $max = 120.0;
+    if ($n < $min) {
+        $n = max($min, $fallback);
+    }
+    if ($n > $max) {
+        $n = $max;
+    }
+    return $n;
+}
+
+function cms_clamp_adbar_scroll_sec($value) {
+    $n = (float) $value;
+    if ($n <= 0) {
+        return ['0', $n < 0];
+    }
+    $min = 5.0;
+    $max = 120.0;
+    $clamped = max($min, min($max, $n));
+    $stored = (string) ((int) $clamped === $clamped ? (int) $clamped : $clamped);
+    return [$stored, abs($clamped - $n) > 0.001];
 }
 
 // All admin-adjustable display sizes (setting key => [min, max]).
@@ -270,7 +362,8 @@ function render_banner_slider($position, $extraClass = 'banner-slider') {
     if (empty($banners)) return;
     $multi = count($banners) > 1;
     $cls = trim('hero-slider ' . $extraClass);
-    echo '<section class="' . e($cls) . '"><div class="slides">';
+    $intervalMs = cms_slider_interval_ms();
+    echo '<section class="' . e($cls) . '" data-interval="' . (int) $intervalMs . '"><div class="slides">';
     foreach ($banners as $idx => $b) {
         echo '<div class="slide ' . ($idx === 0 ? 'active' : '') . '">';
         if (!empty($b['video'])) {
@@ -352,3 +445,5 @@ function link_url($url) {
     }
     return '/' . ltrim($url, '/');
 }
+
+require_once __DIR__ . '/cms_theme.php';

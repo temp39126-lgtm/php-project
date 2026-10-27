@@ -13,7 +13,10 @@ define('DB_PASS', 'KiratveerGF!@#123');
 define('SITE_URL', 'https://gritfitnutri.com');
 define('SITE_NAME', 'Grit Fit Nutri');
 define('SITE_TAGLINE', 'Superfoods for Super You.');
-define('SITE_EMAIL', 'contact@gritfitnutri.in');
+define('SITE_EMAIL', 'info@gritfitnutri.com');
+// From address for outbound mail (use a mailbox on your domain for deliverability).
+define('MAIL_FROM', 'info@gritfitnutri.com');
+define('MAIL_FROM_NAME', 'Grit Fit Nutri');
 define('SITE_PHONE', '+91 9811242068');
 define('SITE_ADDRESS', 'B-161, 3rd Floor, Lok Vihar, Pitampura, New Delhi, 110034');
 define('WHATSAPP_NUMBER', '919811242068');
@@ -149,6 +152,54 @@ function generateCSRFToken() {
 
 function verifyCSRF($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
+/**
+ * Email address that receives contact form submissions (Admin → Footer “Email”).
+ */
+function contact_form_recipient() {
+    $to = trim((string) (function_exists('setting') ? setting('contact_email') : SITE_EMAIL));
+    if ($to === '') {
+        $to = SITE_EMAIL;
+    }
+    return filter_var($to, FILTER_VALIDATE_EMAIL) ? $to : SITE_EMAIL;
+}
+
+/**
+ * Notify the site inbox when someone submits the contact form.
+ */
+function send_contact_form_email($name, $email, $phone, $message) {
+    $to = contact_form_recipient();
+    $siteName = function_exists('setting') ? (setting('site_name') ?: SITE_NAME) : SITE_NAME;
+    $subject = 'New contact form message — ' . $siteName;
+    $lines = [
+        'You received a new message from the website contact form.',
+        '',
+        'Name: ' . $name,
+        'Email: ' . $email,
+        'Phone: ' . ($phone !== '' ? $phone : '(not provided)'),
+        '',
+        'Message:',
+        $message,
+        '',
+        '— ' . $siteName,
+    ];
+    $body = implode("\n", $lines);
+    $from = defined('MAIL_FROM') ? MAIL_FROM : SITE_EMAIL;
+    $fromName = defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : $siteName;
+    $replyTo = filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : $from;
+    $headers = [
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . sprintf('%s <%s>', $fromName, $from),
+        'Reply-To: ' . $replyTo,
+        'X-Mailer: PHP/' . phpversion(),
+    ];
+    $ok = @mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, implode("\r\n", $headers));
+    if (!$ok) {
+        error_log('GritFitNutri contact form mail failed to ' . $to);
+    }
+    return $ok;
 }
 
 // CMS helper layer (settings, content lists, URL helpers). Loaded after the

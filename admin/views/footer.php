@@ -11,7 +11,7 @@ function ft_chk($key, $label) {
 }
 ?>
 <h2 class="page-title">Footer / Contact Information</h2>
-<p class="hint" style="margin-bottom:16px;">Contact details here are shared across the footer, the contact page and product enquiry buttons.</p>
+<p class="hint" style="margin-bottom:16px;">Contact details here are shared across the footer, the contact page and product enquiry buttons. The <strong>Email</strong> field is also where contact form submissions are sent (e.g. <code>info@gritfitnutri.com</code>).</p>
 <form method="POST">
     <input type="hidden" name="action" value="save_settings">
     <input type="hidden" name="return" value="footer">

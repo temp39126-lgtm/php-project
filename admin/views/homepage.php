@@ -11,7 +11,7 @@ function hp_area($key, $label) {
 }
 ?>
 <h2 class="page-title">Homepage</h2>
-<p class="hint" style="margin-bottom:16px;">Manage every homepage section here. Repeatable content (banners, icons, posters, USPS, reviews) has its own section in the sidebar.</p>
+<p class="hint" style="margin-bottom:16px;">Manage every homepage section here. Repeatable content (banners, icons, posters, USPS, reviews) has its own section in the sidebar. Font sizes and colors: <a href="<?= e(adm('design')) ?>">Design / Fonts &amp; Colors</a>.</p>
 <form method="POST" enctype="multipart/form-data">
     <input type="hidden" name="action" value="save_settings">
     <input type="hidden" name="return" value="homepage">

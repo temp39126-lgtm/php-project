@@ -8,9 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csrf'])) {
         $email = trim($_POST['email'] ?? '');
         $phone = trim($_POST['phone'] ?? '');
         $message = trim($_POST['message'] ?? '');
-        if ($name && $email && $message) {
+        if ($name && $email && $message && filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $stmt = $db->prepare("INSERT INTO enquiries (name, email, phone, message) VALUES (?, ?, ?, ?)");
             $stmt->execute([$name, $email, $phone, $message]);
+            send_contact_form_email($name, $email, $phone, $message);
             $msg = 'success';
         }
     }
@@ -21,9 +22,9 @@ $csrf = generateCSRFToken();
 <section class="section">
     <div class="container">
         <div class="contact-grid">
-            <div class="contact-form">
+            <div class="contact-form" id="contact-form">
                 <h1>Contact us</h1>
-                <p>Feel free to contact us with any questions or concerns. We appreciate your interest and look forward to hearing from you.</p>
+                <p>Feel free to contact us with any questions or concerns. We appreciate your interest and look forward to hearing from you.<?php if (setting('contact_email')): ?> Messages are sent to <strong><?= e(setting('contact_email')) ?></strong>.<?php endif; ?></p>
                 
                 <?php if ($msg === 'success'): ?>
                 <div style="padding:15px;background:#d4edda;border-radius:8px;margin-bottom:20px;color:#155724;">Thank you! We'll get back to you soon.</div>
@@ -56,7 +57,8 @@ $csrf = generateCSRFToken();
                 <?php if (setting('contact_email')): ?>
                 <div class="contact-info-card">
                     <h6>Email</h6>
-                    <a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a>
+                    <p><?= e(setting('contact_email')) ?></p>
+                    <p style="font-size:13px;margin-top:6px;">Use the form on the left — we deliver to this inbox.</p>
                 </div>
                 <?php endif; ?>
                 <?php if (setting('contact_phone')): ?>

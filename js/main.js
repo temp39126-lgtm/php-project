@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var dots = slider.querySelectorAll('.slider-dots button');
         var current = 0;
         var timer = null;
-        var INTERVAL = 5500;
+        var INTERVAL = parseInt(slider.getAttribute('data-interval'), 10);
+        if (!INTERVAL || INTERVAL < 1000) INTERVAL = 5500;
 
         function show(n) {
             slides[current].classList.remove('active');

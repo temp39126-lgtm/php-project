@@ -22,14 +22,27 @@ $siteName = setting('site_name');
     <title><?= isset($pageTitle) ? e($pageTitle) . ' | ' : '' ?><?= e($siteName) ?></title>
     <meta name="description" content="<?= isset($pageDesc) ? e($pageDesc) : 'Fueling the World with India\'s Finest Energy Bars. Premium superfood energy bars.' ?>">
     <link rel="stylesheet" href="<?= e(link_url('/css/style.css?v=' . @filemtime(__DIR__ . '/../css/style.css'))) ?>">
-    <style>:root{<?= cms_size_css_variables() ?>}</style>
+    <style>:root{<?= function_exists('cms_storefront_css_variables') ? cms_storefront_css_variables() : cms_size_css_variables() ?>}</style>
     <link rel="icon" href="<?= e(asset_url($logo)) ?>" type="image/png">
 </head>
-<body>
-    <?php if (cms_flag('adbar_enabled') && setting('adbar_text') !== ''): ?>
-    <div class="announcement-bar">
-        <?php if (setting('adbar_link')): ?><a href="<?= e(link_url(setting('adbar_link'))) ?>"><?= e(setting('adbar_text')) ?></a>
-        <?php else: ?><?= e(setting('adbar_text')) ?><?php endif; ?>
+<body class="page-<?= e(preg_replace('~[^a-z0-9_-]~', '', $page ?? 'home')) ?>">
+    <?php if (cms_flag('adbar_enabled') && setting('adbar_text') !== ''):
+        $adbarText = setting('adbar_text');
+        $adbarLink = setting('adbar_link');
+        $adbarScrollSec = function_exists('cms_adbar_scroll_sec') ? cms_adbar_scroll_sec() : 0;
+    ?>
+    <div class="announcement-bar<?= $adbarScrollSec > 0 ? ' announcement-bar--scroll' : '' ?>"<?= $adbarScrollSec > 0 ? ' style="--adbar-duration:' . e((string) $adbarScrollSec) . 's"' : '' ?>>
+        <?php if ($adbarScrollSec > 0): ?>
+        <div class="announcement-track">
+            <?php for ($adbarCopy = 0; $adbarCopy < 2; $adbarCopy++): ?>
+            <span class="announcement-segment">
+                <?php if ($adbarLink): ?><a href="<?= e(link_url($adbarLink)) ?>"><?= e($adbarText) ?></a>
+                <?php else: ?><?= e($adbarText) ?><?php endif; ?>
+            </span>
+            <?php endfor; ?>
+        </div>
+        <?php elseif ($adbarLink): ?><a href="<?= e(link_url($adbarLink)) ?>"><?= e($adbarText) ?></a>
+        <?php else: ?><?= e($adbarText) ?><?php endif; ?>
     </div>
     <?php endif; ?>
 
