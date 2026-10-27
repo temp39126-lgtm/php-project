@@ -40,6 +40,21 @@ switch ($action) {
                     if ($wasClamped) {
                         $clamped[] = $key;
                     }
+                } elseif (function_exists('cms_clamp_theme_px') && isset(cms_theme_px_specs()[$key])) {
+                    [$val, $wasClamped] = cms_clamp_theme_px($key, $v);
+                    if ($wasClamped) {
+                        $clamped[] = $key;
+                    }
+                } elseif (function_exists('cms_clamp_theme_color') && isset(cms_theme_color_css_map()[$key])) {
+                    [$val, $wasClamped] = cms_clamp_theme_color($key, $v);
+                    if ($wasClamped) {
+                        $clamped[] = $key;
+                    }
+                } elseif (in_array($key, ['theme_font_body', 'theme_font_heading'], true)) {
+                    $allowed = array_keys(cms_theme_font_stacks());
+                    $fallback = $key === 'theme_font_heading' ? 'playfair' : 'poppins';
+                    $val = in_array($v, $allowed, true) ? (string) $v : $fallback;
+                    $wasClamped = ($val !== (string) $v);
                 } else {
                     $val = (string) $v;
                 }
