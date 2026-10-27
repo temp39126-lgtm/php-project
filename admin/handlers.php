@@ -32,9 +32,23 @@ switch ($action) {
         try {
             foreach (($_POST['s'] ?? []) as $k => $v) {
                 $key = (string) $k;
+                if ($key === 'slider_speed_sec') {
+                    $key = 'slider_speed_ms';
+                    $v = (string) ((int) round((float) $v * 1000));
+                }
                 if (is_array($v)) {
                     $val = implode(',', $v);
                     $wasClamped = false;
+                } elseif ($key === 'slider_speed_ms' && function_exists('cms_clamp_slider_speed_ms')) {
+                    [$val, $wasClamped] = cms_clamp_slider_speed_ms($v);
+                    if ($wasClamped) {
+                        $clamped[] = 'slider_speed_ms';
+                    }
+                } elseif ($key === 'adbar_scroll_sec' && function_exists('cms_clamp_adbar_scroll_sec')) {
+                    [$val, $wasClamped] = cms_clamp_adbar_scroll_sec($v);
+                    if ($wasClamped) {
+                        $clamped[] = 'adbar_scroll_sec';
+                    }
                 } elseif (function_exists('cms_clamp_size_setting') && isset(cms_size_specs()[$key])) {
                     [$val, $wasClamped] = cms_clamp_size_setting($key, $v);
                     if ($wasClamped) {
