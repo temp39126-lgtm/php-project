@@ -86,7 +86,10 @@ if (empty($socialSvg)) {
                 <div class="footer-contact">
                     <h5>Contact Us</h5>
                     <?php if (setting('contact_phone')): ?><a href="tel:<?= e(str_replace(' ', '', setting('contact_phone'))) ?>"><?= e(setting('contact_phone')) ?></a><?php endif; ?>
-                    <?php if (setting('contact_email')): ?><a href="mailto:<?= e(setting('contact_email')) ?>"><?= e(setting('contact_email')) ?></a><?php endif; ?>
+                    <?php if (setting('contact_email')): ?>
+                    <a href="<?= e(link_url('/contact#contact-form')) ?>"><?= e(setting('contact_email')) ?></a>
+                    <span style="display:block;font-size:12px;opacity:0.65;margin-top:4px;">Tap email to open the contact form</span>
+                    <?php endif; ?>
                     <?php if (setting('contact_address')): ?><p style="margin-top:12px;"><?= e(setting('contact_address')) ?></p><?php endif; ?>
                 </div>
                 <?php if (cms_flag('footer_newsletter_enabled')): ?>
