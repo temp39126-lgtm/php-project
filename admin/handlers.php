@@ -44,6 +44,11 @@ switch ($action) {
                     if ($wasClamped) {
                         $clamped[] = 'slider_speed_ms';
                     }
+                } elseif ($key === 'adbar_scroll_sec' && function_exists('cms_clamp_adbar_scroll_sec')) {
+                    [$val, $wasClamped] = cms_clamp_adbar_scroll_sec($v);
+                    if ($wasClamped) {
+                        $clamped[] = 'adbar_scroll_sec';
+                    }
                 } elseif (function_exists('cms_clamp_size_setting') && isset(cms_size_specs()[$key])) {
                     [$val, $wasClamped] = cms_clamp_size_setting($key, $v);
                     if ($wasClamped) {

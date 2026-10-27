@@ -33,6 +33,7 @@ function cms_defaults() {
         'adbar_enabled'        => '1',
         'adbar_text'           => "Fueling the World with India's Finest Energy Bars.",
         'adbar_link'           => '',
+        'adbar_scroll_sec'     => '25', // one marquee cycle; 0 = static centered text
 
         // Slider / carousel (homepage top)
         'slider_enabled'       => '1',
@@ -207,6 +208,41 @@ function cms_clamp_slider_speed_ms($value) {
     $n = (int) $value;
     $clamped = max($min, min($max, $n));
     return [(string) $clamped, $clamped !== $n];
+}
+
+// Announcement bar scroll cycle time in seconds (0 = no animation).
+function cms_adbar_scroll_sec() {
+    $defaults = cms_defaults();
+    $fallback = (float) ($defaults['adbar_scroll_sec'] ?? 25);
+    $raw = setting('adbar_scroll_sec');
+    if ($raw === '' || $raw === null) {
+        return $fallback;
+    }
+    $n = (float) $raw;
+    if ($n <= 0) {
+        return 0.0;
+    }
+    $min = 5.0;
+    $max = 120.0;
+    if ($n < $min) {
+        $n = max($min, $fallback);
+    }
+    if ($n > $max) {
+        $n = $max;
+    }
+    return $n;
+}
+
+function cms_clamp_adbar_scroll_sec($value) {
+    $n = (float) $value;
+    if ($n <= 0) {
+        return ['0', $n < 0];
+    }
+    $min = 5.0;
+    $max = 120.0;
+    $clamped = max($min, min($max, $n));
+    $stored = (string) ((int) $clamped === $clamped ? (int) $clamped : $clamped);
+    return [$stored, abs($clamped - $n) > 0.001];
 }
 
 // All admin-adjustable display sizes (setting key => [min, max]).
