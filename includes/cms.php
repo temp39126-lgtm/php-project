@@ -145,6 +145,9 @@ function cms_defaults() {
         'poster_size'          => '80',  // certificate / poster strip image height
         'usp_size'             => '38',  // USPS ("Why Choose Us") icon size
     ];
+    if (function_exists('cms_theme_default_settings')) {
+        $d = array_merge($d, cms_theme_default_settings());
+    }
     return $d;
 }
 
@@ -377,3 +380,5 @@ function link_url($url) {
     }
     return '/' . ltrim($url, '/');
 }
+
+require_once __DIR__ . '/cms_theme.php';

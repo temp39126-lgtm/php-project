@@ -7,7 +7,7 @@ function about_area($key, $label) {
 }
 ?>
 <h2 class="page-title">About Us Page</h2>
-<p class="hint" style="margin-bottom:16px;">Edits the public page at <a href="<?= e(link_url('/about-us')) ?>" target="_blank" rel="noopener">/about-us</a>. Leave a field empty to hide that piece on the site (except the hero title, which falls back to “About Us”).</p>
+<p class="hint" style="margin-bottom:16px;">Edits the public page at <a href="<?= e(link_url('/about-us')) ?>" target="_blank" rel="noopener">/about-us</a>. Leave a field empty to hide that piece on the site (except the hero title, which falls back to “About Us”). Font sizes and colors: <a href="<?= e(adm('design')) ?>">Design / Fonts &amp; Colors</a>.</p>
 
 <form method="POST" enctype="multipart/form-data">
     <input type="hidden" name="action" value="save_settings">
